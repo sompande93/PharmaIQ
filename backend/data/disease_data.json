@@ -1,0 +1,60 @@
+{
+    "disease_reports": [
+        {
+            "report_id": "IDSP_2026_W10_DEL_E",
+            "disease": "dengue",
+            "region": "east_delhi",
+            "state": "Delhi",
+            "week": "2026-W10",
+            "confirmed_cases": 847,
+            "suspected_cases": 1230,
+            "trend": "rising",
+            "previous_week_cases": 312,
+            "growth_rate_pct": 171.5,
+            "alert_level": "outbreak",
+            "affected_districts": [
+                "Shahdara",
+                "Preet Vihar",
+                "Laxmi Nagar",
+                "Mayur Vihar"
+            ],
+            "reporting_date": "2026-03-10"
+        },
+        {
+            "report_id": "IDSP_2026_W10_DEL_S",
+            "disease": "dengue",
+            "region": "south_delhi",
+            "state": "Delhi",
+            "week": "2026-W10",
+            "confirmed_cases": 124,
+            "suspected_cases": 210,
+            "trend": "stable",
+            "previous_week_cases": 118,
+            "growth_rate_pct": 5.1,
+            "alert_level": "watch",
+            "affected_districts": [
+                "Saket",
+                "Malviya Nagar"
+            ],
+            "reporting_date": "2026-03-10"
+        },
+        {
+            "report_id": "IDSP_2026_W10_PUN",
+            "disease": "influenza",
+            "region": "pune_west",
+            "state": "Maharashtra",
+            "week": "2026-W10",
+            "confirmed_cases": 56,
+            "suspected_cases": 140,
+            "trend": "stable",
+            "previous_week_cases": 60,
+            "growth_rate_pct": -6.7,
+            "alert_level": "normal",
+            "affected_districts": [
+                "Kothrud",
+                "Warje"
+            ],
+            "reporting_date": "2026-03-10"
+        }
+    ]
+}

@@ -1,0 +1,150 @@
+{
+    "forecasts": [
+        {
+            "region": "east_delhi",
+            "forecast_date": "2026-03-11",
+            "forecast_days": 14,
+            "daily_forecasts": [
+                {
+                    "date": "2026-03-11",
+                    "temp_high": 34,
+                    "temp_low": 24,
+                    "humidity": 88,
+                    "rainfall_mm": 15,
+                    "condition": "thunderstorm"
+                },
+                {
+                    "date": "2026-03-12",
+                    "temp_high": 33,
+                    "temp_low": 25,
+                    "humidity": 92,
+                    "rainfall_mm": 28,
+                    "condition": "heavy_rain"
+                },
+                {
+                    "date": "2026-03-13",
+                    "temp_high": 32,
+                    "temp_low": 24,
+                    "humidity": 90,
+                    "rainfall_mm": 22,
+                    "condition": "heavy_rain"
+                },
+                {
+                    "date": "2026-03-14",
+                    "temp_high": 33,
+                    "temp_low": 25,
+                    "humidity": 85,
+                    "rainfall_mm": 8,
+                    "condition": "light_rain"
+                },
+                {
+                    "date": "2026-03-15",
+                    "temp_high": 35,
+                    "temp_low": 26,
+                    "humidity": 80,
+                    "rainfall_mm": 0,
+                    "condition": "cloudy"
+                },
+                {
+                    "date": "2026-03-16",
+                    "temp_high": 36,
+                    "temp_low": 27,
+                    "humidity": 78,
+                    "rainfall_mm": 0,
+                    "condition": "clear"
+                },
+                {
+                    "date": "2026-03-17",
+                    "temp_high": 34,
+                    "temp_low": 25,
+                    "humidity": 82,
+                    "rainfall_mm": 12,
+                    "condition": "light_rain"
+                },
+                {
+                    "date": "2026-03-18",
+                    "temp_high": 33,
+                    "temp_low": 24,
+                    "humidity": 88,
+                    "rainfall_mm": 20,
+                    "condition": "heavy_rain"
+                },
+                {
+                    "date": "2026-03-19",
+                    "temp_high": 32,
+                    "temp_low": 24,
+                    "humidity": 91,
+                    "rainfall_mm": 30,
+                    "condition": "heavy_rain"
+                },
+                {
+                    "date": "2026-03-20",
+                    "temp_high": 31,
+                    "temp_low": 23,
+                    "humidity": 93,
+                    "rainfall_mm": 35,
+                    "condition": "thunderstorm"
+                },
+                {
+                    "date": "2026-03-21",
+                    "temp_high": 32,
+                    "temp_low": 24,
+                    "humidity": 90,
+                    "rainfall_mm": 18,
+                    "condition": "heavy_rain"
+                },
+                {
+                    "date": "2026-03-22",
+                    "temp_high": 33,
+                    "temp_low": 25,
+                    "humidity": 85,
+                    "rainfall_mm": 5,
+                    "condition": "light_rain"
+                },
+                {
+                    "date": "2026-03-23",
+                    "temp_high": 34,
+                    "temp_low": 26,
+                    "humidity": 80,
+                    "rainfall_mm": 0,
+                    "condition": "cloudy"
+                },
+                {
+                    "date": "2026-03-24",
+                    "temp_high": 35,
+                    "temp_low": 27,
+                    "humidity": 75,
+                    "rainfall_mm": 0,
+                    "condition": "clear"
+                }
+            ],
+            "mosquito_risk": "very_high",
+            "waterlogging_risk": "high"
+        },
+        {
+            "region": "south_delhi",
+            "forecast_date": "2026-03-11",
+            "forecast_days": 14,
+            "daily_forecasts": [
+                {
+                    "date": "2026-03-11",
+                    "temp_high": 34,
+                    "temp_low": 23,
+                    "humidity": 65,
+                    "rainfall_mm": 0,
+                    "condition": "clear"
+                },
+                {
+                    "date": "2026-03-12",
+                    "temp_high": 35,
+                    "temp_low": 24,
+                    "humidity": 60,
+                    "rainfall_mm": 0,
+                    "condition": "clear"
+                }
+            ],
+            "mosquito_risk": "low",
+            "waterlogging_risk": "low"
+        }
+    ]
+}

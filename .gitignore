@@ -1,0 +1,24 @@
+# Node.js
+node_modules/
+.next/
+out/
+build/
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.venv/
+env/
+.env
+
+# Data & Cache
+backend/data/runs.json
+backend/data/test_write.txt
+.DS_Store
+.vscode/
+
+# Project specifics
+*.drawio.bkp

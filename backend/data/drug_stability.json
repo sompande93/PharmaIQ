@@ -1,0 +1,70 @@
+{
+    "drugs": [
+        {
+            "drug_id": "insulin_humalog",
+            "name": "Insulin Humalog 100IU",
+            "storage_temp_min": 2.0,
+            "storage_temp_max": 8.0,
+            "critical_temp": 10.0,
+            "max_excursion_hours_at_10c": 4.0,
+            "max_excursion_hours_at_12c": 1.0,
+            "schedule": "H",
+            "requires_cold_chain": true
+        },
+        {
+            "drug_id": "insulin_lantus",
+            "name": "Insulin Lantus",
+            "storage_temp_min": 2.0,
+            "storage_temp_max": 8.0,
+            "critical_temp": 10.0,
+            "max_excursion_hours_at_10c": 6.0,
+            "max_excursion_hours_at_12c": 2.0,
+            "schedule": "H",
+            "requires_cold_chain": true
+        },
+        {
+            "drug_id": "insulin_novolog",
+            "name": "Insulin NovoLog",
+            "storage_temp_min": 2.0,
+            "storage_temp_max": 8.0,
+            "critical_temp": 10.0,
+            "max_excursion_hours_at_10c": 3.5,
+            "max_excursion_hours_at_12c": 0.5,
+            "schedule": "H",
+            "requires_cold_chain": true
+        },
+        {
+            "drug_id": "hepatitis_b_vaccine",
+            "name": "Hepatitis B Vaccine",
+            "storage_temp_min": 2.0,
+            "storage_temp_max": 8.0,
+            "critical_temp": 9.0,
+            "max_excursion_hours_at_10c": 2.0,
+            "max_excursion_hours_at_12c": 0.0,
+            "schedule": "H",
+            "requires_cold_chain": true
+        },
+        {
+            "drug_id": "paracetamol_650",
+            "name": "Paracetamol 650mg",
+            "storage_temp_min": 15.0,
+            "storage_temp_max": 30.0,
+            "critical_temp": 40.0,
+            "max_excursion_hours_at_10c": null,
+            "max_excursion_hours_at_12c": null,
+            "schedule": "none",
+            "requires_cold_chain": false
+        },
+        {
+            "drug_id": "azithromycin_500",
+            "name": "Azithromycin 500mg",
+            "storage_temp_min": 15.0,
+            "storage_temp_max": 30.0,
+            "critical_temp": 40.0,
+            "max_excursion_hours_at_10c": null,
+            "max_excursion_hours_at_12c": null,
+            "schedule": "H1",
+            "requires_cold_chain": false
+        }
+    ]
+}

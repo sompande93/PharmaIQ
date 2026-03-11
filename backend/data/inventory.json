@@ -1,0 +1,88 @@
+{
+  "inventory": [
+    {
+      "sku_id": "INS_HUMALOG_100",
+      "drug_name": "Insulin Humalog 100IU",
+      "category": "cold_chain",
+      "schedule": "H",
+      "store_id": "STORE_142",
+      "batch_id": "BATCH_INS_2847",
+      "quantity": 500,
+      "unit_price": 760,
+      "expiry_date": "2026-09-15",
+      "fridge_id": "FRIDGE_142_03",
+      "daily_velocity": 12,
+      "status": "quarantined"
+    },
+    {
+      "sku_id": "PARA_650",
+      "drug_name": "Paracetamol 650mg",
+      "category": "otc",
+      "schedule": "none",
+      "store_id": "STORE_088",
+      "batch_id": "BATCH_PARA_9921",
+      "quantity": 2000,
+      "unit_price": 15,
+      "expiry_date": "2027-03-10",
+      "fridge_id": null,
+      "daily_velocity": 85,
+      "status": "active"
+    },
+    {
+      "sku_id": "DENGUE_KIT",
+      "drug_name": "Dengue NS1 Test Kit",
+      "category": "diagnostic",
+      "schedule": "none",
+      "store_id": "STORE_088",
+      "batch_id": "BATCH_DNG_4401",
+      "quantity": 120,
+      "unit_price": 350,
+      "expiry_date": "2026-12-01",
+      "fridge_id": null,
+      "daily_velocity": 5,
+      "status": "active"
+    },
+    {
+      "sku_id": "PLATELET_SUPP",
+      "drug_name": "Papaya Leaf Extract (Platelet Boost)",
+      "category": "supplement",
+      "schedule": "none",
+      "store_id": "STORE_201",
+      "batch_id": "BATCH_PLT_7720",
+      "quantity": 300,
+      "unit_price": 180,
+      "expiry_date": "2027-01-20",
+      "fridge_id": null,
+      "daily_velocity": 8,
+      "status": "active"
+    },
+    {
+      "sku_id": "AZITH_500",
+      "drug_name": "Azithromycin 500mg",
+      "category": "antibiotic",
+      "schedule": "H1",
+      "store_id": "STORE_055",
+      "batch_id": "BATCH_AZI_3310",
+      "quantity": 2400,
+      "unit_price": 45,
+      "expiry_date": "2026-05-25",
+      "fridge_id": null,
+      "daily_velocity": 8,
+      "status": "active"
+    },
+    {
+      "sku_id": "MOSQ_REP",
+      "drug_name": "Mosquito Repellent Cream",
+      "category": "otc",
+      "schedule": "none",
+      "store_id": "STORE_088",
+      "batch_id": "BATCH_MOS_1105",
+      "quantity": 500,
+      "unit_price": 95,
+      "expiry_date": "2027-06-01",
+      "fridge_id": null,
+      "daily_velocity": 12,
+      "status": "active"
+    }
+  ]
+}

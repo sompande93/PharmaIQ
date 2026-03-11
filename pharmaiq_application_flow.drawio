@@ -1,0 +1,447 @@
+<mxfile host="app.diagrams.net" modified="2026-03-11T08:55:00.000Z" agent="PharmaIQ" version="24.0.0" type="device">
+  <diagram id="flow1" name="Flow 1 - Cold Chain Breach">
+    <mxGraphModel dx="1600" dy="1200" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="900" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <!-- TITLE -->
+        <mxCell id="t1" value="FLOW 1: Cold Chain Temperature Breach   (SOMA Agent Pipeline)" style="text;html=0;align=center;verticalAlign=middle;fontSize=16;fontStyle=1;fontColor=#1a1a2e;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="250" y="15" width="700" height="30" as="geometry"/>
+        </mxCell>
+        <mxCell id="t1b" value="Scenario: Fridge #47 at Store #142 (South Delhi) rises to 9.2C at 2:17 AM" style="text;html=0;align=center;verticalAlign=middle;fontSize=10;fontColor=#636e72;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="300" y="42" width="600" height="20" as="geometry"/>
+        </mxCell>
+
+        <!-- STEP NUMBERS (top row as reference) -->
+        <mxCell id="sn1" value="STEP 1" style="text;html=0;align=center;fontSize=9;fontStyle=1;fontColor=#e94560;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="90" y="75" width="60" height="15" as="geometry"/>
+        </mxCell>
+        <mxCell id="sn2" value="STEP 2" style="text;html=0;align=center;fontSize=9;fontStyle=1;fontColor=#e94560;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="310" y="75" width="60" height="15" as="geometry"/>
+        </mxCell>
+        <mxCell id="sn3" value="STEP 3" style="text;html=0;align=center;fontSize=9;fontStyle=1;fontColor=#e94560;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="560" y="75" width="60" height="15" as="geometry"/>
+        </mxCell>
+        <mxCell id="sn4" value="STEP 4" style="text;html=0;align=center;fontSize=9;fontStyle=1;fontColor=#e94560;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="810" y="75" width="60" height="15" as="geometry"/>
+        </mxCell>
+        <mxCell id="sn5" value="STEP 5" style="text;html=0;align=center;fontSize=9;fontStyle=1;fontColor=#e94560;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="1060" y="75" width="60" height="15" as="geometry"/>
+        </mxCell>
+
+        <!-- ROW 1: SIGNAL DETECTION -->
+        <mxCell id="f1_signal" value="IoT Fridge MCP&#xa;detects 9.2C&#xa;(threshold: 8C)&#xa;at 2:17 AM" style="rounded=1;whiteSpace=wrap;fillColor=#0f3460;strokeColor=#533483;fontColor=#E0E0E0;fontSize=10;align=center;" vertex="1" parent="1">
+          <mxGeometry x="50" y="95" width="140" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="f1_soma" value="SOMA receives&#xa;breach alert&#xa;&#xa;Queries Drug Stability MCP&#xa;for insulin tolerance" style="rounded=1;whiteSpace=wrap;fillColor=#e94560;strokeColor=#c81d45;fontColor=#FFFFFF;fontSize=10;align=center;" vertex="1" parent="1">
+          <mxGeometry x="260" y="95" width="160" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="f1_reason" value="SOMA reasoning:&#xa;&#xa;Insulin tolerance = 4hrs at 10C&#xa;Breach duration = 47 min&#xa;VERDICT: At risk&#xa;500 vials affected" style="rounded=1;whiteSpace=wrap;fillColor=#e94560;strokeColor=#c81d45;fontColor=#FFFFFF;fontSize=9;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="500" y="90" width="180" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="f1_state" value="Shared State Updated:&#xa;&#xa;store_142.fridge_47 = BREACH&#xa;batch_INS_2847 = AT_RISK&#xa;patient_impact = HIGH" style="rounded=1;whiteSpace=wrap;fillColor=#0f3460;strokeColor=#e94560;fontColor=#E0E0E0;fontSize=9;align=left;spacingLeft=8;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="755" y="90" width="180" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="f1_pulse_read" value="PULSE reads state&#xa;&#xa;Checks: Is Store #142&#xa;near a dialysis center?&#xa;YES - critical supply point&#xa;Flags replacement urgency" style="rounded=1;whiteSpace=wrap;fillColor=#533483;strokeColor=#3c1f6e;fontColor=#FFFFFF;fontSize=9;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="1010" y="90" width="180" height="80" as="geometry"/>
+        </mxCell>
+
+        <!-- Row 1 arrows -->
+        <mxCell id="a1" style="rounded=0;strokeColor=#E0E0E0;strokeWidth=2;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="f1_signal" target="f1_soma">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="a2" style="rounded=0;strokeColor=#E0E0E0;strokeWidth=2;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="f1_soma" target="f1_reason">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="a3" style="rounded=0;strokeColor=#E0E0E0;strokeWidth=2;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="f1_reason" target="f1_state">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="a4" style="rounded=0;strokeColor=#E0E0E0;strokeWidth=2;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="f1_state" target="f1_pulse_read">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- DIVIDER -->
+        <mxCell id="div1" value="" style="line;strokeColor=#636e72;strokeWidth=1;dashed=1;dashPattern=4 4;" vertex="1" parent="1">
+          <mxGeometry x="40" y="195" width="1300" height="1" as="geometry"/>
+        </mxCell>
+
+        <!-- ROW 2: PROPOSED ACTIONS -->
+        <mxCell id="prop_label" value="STEP 6: PROPOSED ACTIONS" style="text;html=0;align=left;fontSize=9;fontStyle=1;fontColor=#00d2d3;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="50" y="205" width="200" height="15" as="geometry"/>
+        </mxCell>
+        <mxCell id="f1_action1" value="SOMA proposes:&#xa;&#xa;QUARANTINE batch INS_2847&#xa;Block from POS immediately&#xa;Notify Store #142 manager" style="rounded=1;whiteSpace=wrap;fillColor=#e94560;strokeColor=#c81d45;fontColor=#FFFFFF;fontSize=9;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="50" y="225" width="210" height="75" as="geometry"/>
+        </mxCell>
+        <mxCell id="f1_action2" value="PULSE proposes:&#xa;&#xa;PRIORITY REORDER 500 vials&#xa;insulin from nearest distributor&#xa;Flag dialysis center dependency" style="rounded=1;whiteSpace=wrap;fillColor=#533483;strokeColor=#3c1f6e;fontColor=#FFFFFF;fontSize=9;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="310" y="225" width="210" height="75" as="geometry"/>
+        </mxCell>
+
+        <!-- Arrow down to critique -->
+        <mxCell id="a5" value="To Critique" style="rounded=0;strokeColor=#00d2d3;strokeWidth=2;fontSize=8;fontStyle=1;fontColor=#00d2d3;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="f1_action2" target="f1_vigil">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- ROW 2B: CRITIQUE -->
+        <mxCell id="crit_label" value="STEP 7: CRITIQUE VALIDATION" style="text;html=0;align=left;fontSize=9;fontStyle=1;fontColor=#00d2d3;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="590" y="205" width="200" height="15" as="geometry"/>
+        </mxCell>
+        <mxCell id="f1_vigil" value="VIGIL checks:&#xa;&#xa;Quarantine = WHO compliant&#xa;Reorder qty = within norms&#xa;RESULT: PASS" style="rounded=1;whiteSpace=wrap;fillColor=#00b894;strokeColor=#00a381;fontColor=#FFFFFF;fontSize=9;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="590" y="225" width="190" height="75" as="geometry"/>
+        </mxCell>
+        <mxCell id="f1_audit" value="AUDIT checks:&#xa;&#xa;Reorder cost = 1.2L&#xa;vs batch save = 3.8L&#xa;ROI = 3.2x   RESULT: PASS" style="rounded=1;whiteSpace=wrap;fillColor=#0984e3;strokeColor=#0767b6;fontColor=#FFFFFF;fontSize=9;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="830" y="225" width="190" height="75" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="a5b" style="rounded=0;strokeColor=#E0E0E0;strokeWidth=2;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="f1_vigil" target="f1_audit">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="f1_pass" value="BOTH&#xa;PASS" style="rhombus;whiteSpace=wrap;fillColor=#fdcb6e;strokeColor=#e17055;fontColor=#2d3436;fontSize=10;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="1080" y="230" width="80" height="65" as="geometry"/>
+        </mxCell>
+        <mxCell id="a5c" style="rounded=0;strokeColor=#E0E0E0;strokeWidth=2;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="f1_audit" target="f1_pass">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- DIVIDER -->
+        <mxCell id="div2" value="" style="line;strokeColor=#636e72;strokeWidth=1;dashed=1;dashPattern=4 4;" vertex="1" parent="1">
+          <mxGeometry x="40" y="325" width="1300" height="1" as="geometry"/>
+        </mxCell>
+
+        <!-- ROW 3: HITL ROUTING -->
+        <mxCell id="hitl_label" value="STEP 8: HITL ROUTING" style="text;html=0;align=left;fontSize=9;fontStyle=1;fontColor=#fdcb6e;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="50" y="335" width="200" height="15" as="geometry"/>
+        </mxCell>
+        <mxCell id="f1_green" value="Quarantine action&#xa;---&#xa;GREEN LANE&#xa;Auto-approved&#xa;(safety = always auto)" style="rounded=1;whiteSpace=wrap;fillColor=#00b894;strokeColor=#00a381;fontColor=#FFFFFF;fontSize=10;align=center;" vertex="1" parent="1">
+          <mxGeometry x="50" y="355" width="180" height="75" as="geometry"/>
+        </mxCell>
+        <mxCell id="f1_yellow" value="Reorder 500 vials = 1.2L&#xa;---&#xa;YELLOW LANE&#xa;System recommends&#xa;Manager approves via app" style="rounded=1;whiteSpace=wrap;fillColor=#fdcb6e;strokeColor=#e17055;fontColor=#2d3436;fontSize=10;align=center;" vertex="1" parent="1">
+          <mxGeometry x="310" y="355" width="210" height="75" as="geometry"/>
+        </mxCell>
+        <mxCell id="f1_manager" value="Manager gets push&#xa;notification at 2:19 AM&#xa;&#xa;Sees: Full context, ROI,&#xa;critique results&#xa;&#xa;Taps: APPROVE" style="rounded=1;whiteSpace=wrap;fillColor=#6c5ce7;strokeColor=#4834d4;fontColor=#FFFFFF;fontSize=9;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="590" y="350" width="190" height="85" as="geometry"/>
+        </mxCell>
+        <mxCell id="a6" style="rounded=0;strokeColor=#fdcb6e;strokeWidth=2;dashed=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="f1_yellow" target="f1_manager">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- DIVIDER -->
+        <mxCell id="div3" value="" style="line;strokeColor=#636e72;strokeWidth=1;dashed=1;dashPattern=4 4;" vertex="1" parent="1">
+          <mxGeometry x="40" y="460" width="1300" height="1" as="geometry"/>
+        </mxCell>
+
+        <!-- ROW 4: EXECUTION -->
+        <mxCell id="exec_label" value="STEP 9: EXECUTION (2:19 AM - 2 minutes after breach detection)" style="text;html=0;align=left;fontSize=9;fontStyle=1;fontColor=#E0E0E0;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="50" y="470" width="450" height="15" as="geometry"/>
+        </mxCell>
+        <mxCell id="f1_exec1" value="ERP MCP executes:&#xa;block_batch_sale(INS_2847)&#xa;&#xa;Batch blocked at POS&#xa;across all terminals" style="rounded=1;whiteSpace=wrap;fillColor=#e94560;strokeColor=#c81d45;fontColor=#FFFFFF;fontSize=9;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="50" y="490" width="180" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="f1_exec2" value="Distributor MCP executes:&#xa;submit_priority_order()&#xa;&#xa;500 vials insulin&#xa;via express delivery" style="rounded=1;whiteSpace=wrap;fillColor=#533483;strokeColor=#3c1f6e;fontColor=#FFFFFF;fontSize=9;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="280" y="490" width="180" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="f1_exec3" value="HRMS MCP executes:&#xa;assign_shift()&#xa;&#xa;Morning pharmacist&#xa;alerted to handle returns" style="rounded=1;whiteSpace=wrap;fillColor=#00b894;strokeColor=#00a381;fontColor=#FFFFFF;fontSize=9;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="510" y="490" width="180" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="f1_exec4" value="Notification sent:&#xa;SMS + App Push&#xa;&#xa;Store manager&#xa;Area supervisor&#xa;Cold chain officer" style="rounded=1;whiteSpace=wrap;fillColor=#6c5ce7;strokeColor=#4834d4;fontColor=#FFFFFF;fontSize=9;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="740" y="490" width="160" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="f1_exec5" value="Audit Log created:&#xa;&#xa;Full trace recorded&#xa;Breach to resolution&#xa;Time: 2 min 14 sec" style="rounded=1;whiteSpace=wrap;fillColor=#636e72;strokeColor=#2d3436;fontColor=#FFFFFF;fontSize=9;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="950" y="490" width="160" height="70" as="geometry"/>
+        </mxCell>
+
+        <!-- Row 4 arrows -->
+        <mxCell id="a7" style="rounded=0;strokeColor=#E0E0E0;strokeWidth=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="f1_exec1" target="f1_exec2">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="a8" style="rounded=0;strokeColor=#E0E0E0;strokeWidth=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="f1_exec2" target="f1_exec3">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="a9" style="rounded=0;strokeColor=#E0E0E0;strokeWidth=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="f1_exec3" target="f1_exec4">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="a10" style="rounded=0;strokeColor=#E0E0E0;strokeWidth=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="f1_exec4" target="f1_exec5">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- DIVIDER -->
+        <mxCell id="div4" value="" style="line;strokeColor=#636e72;strokeWidth=1;dashed=1;dashPattern=4 4;" vertex="1" parent="1">
+          <mxGeometry x="40" y="585" width="1300" height="1" as="geometry"/>
+        </mxCell>
+
+        <!-- ROW 5: FEEDBACK -->
+        <mxCell id="fb_label" value="STEP 10: FEEDBACK LOOP" style="text;html=0;align=left;fontSize=9;fontStyle=1;fontColor=#e94560;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="50" y="595" width="200" height="15" as="geometry"/>
+        </mxCell>
+        <mxCell id="f1_fb1" value="State Updated:&#xa;&#xa;breach_count +1&#xa;batch_saved_value = 3.8L&#xa;response_time = 2m14s" style="rounded=1;whiteSpace=wrap;fillColor=#0f3460;strokeColor=#e94560;fontColor=#E0E0E0;fontSize=9;align=left;spacingLeft=8;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="50" y="615" width="190" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="f1_fb2" value="SOMA learns:&#xa;&#xa;Fridge #47 has had 3&#xa;breaches this quarter.&#xa;Flags for maintenance." style="rounded=1;whiteSpace=wrap;fillColor=#e94560;strokeColor=#c81d45;fontColor=#FFFFFF;fontSize=9;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="310" y="615" width="190" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="f1_fb3" value="Telemetry:&#xa;&#xa;KPI updated in&#xa;real-time dashboard&#xa;Recovery: 3.8L saved" style="rounded=1;whiteSpace=wrap;fillColor=#fdcb6e;strokeColor=#e17055;fontColor=#2d3436;fontSize=9;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="570" y="615" width="170" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="a11" style="rounded=0;strokeColor=#E0E0E0;strokeWidth=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="f1_fb1" target="f1_fb2">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="a12" style="rounded=0;strokeColor=#E0E0E0;strokeWidth=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="f1_fb2" target="f1_fb3">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- OUTCOME BOX -->
+        <mxCell id="outcome" value="OUTCOME: Patient safety protected.  3.8L batch saved. 2 minute response time.  Full audit trail logged." style="rounded=1;whiteSpace=wrap;fillColor=#1a1a2e;strokeColor=#e94560;fontColor=#E0E0E0;fontSize=11;fontStyle=1;align=center;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="200" y="720" width="800" height="40" as="geometry"/>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+
+  <!-- ================================================================ -->
+  <!-- FLOW 2: EPIDEMIC DEMAND SPIKE                                    -->
+  <!-- ================================================================ -->
+  <diagram id="flow2" name="Flow 2 - Epidemic Demand Spike">
+    <mxGraphModel dx="1600" dy="1200" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="900" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <!-- TITLE -->
+        <mxCell id="t2" value="FLOW 2: Epidemic Demand Spike   (PULSE Agent Pipeline)" style="text;html=0;align=center;verticalAlign=middle;fontSize=16;fontStyle=1;fontColor=#1a1a2e;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="250" y="15" width="700" height="30" as="geometry"/>
+        </mxCell>
+        <mxCell id="t2b" value="Scenario: Dengue cluster detected in East Delhi.  18 MedChain stores in affected zone." style="text;html=0;align=center;verticalAlign=middle;fontSize=10;fontColor=#636e72;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="250" y="42" width="700" height="20" as="geometry"/>
+        </mxCell>
+
+        <!-- ROW 1: DETECTION -->
+        <mxCell id="sn2_1" value="STEP 1: SIGNAL DETECTION" style="text;html=0;align=left;fontSize=9;fontStyle=1;fontColor=#533483;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="50" y="75" width="200" height="15" as="geometry"/>
+        </mxCell>
+        <mxCell id="f2_idsp" value="Health Data MCP&#xa;&#xa;IDSP reports 847 dengue&#xa;cases in East Delhi&#xa;district this week" style="rounded=1;whiteSpace=wrap;fillColor=#0f3460;strokeColor=#533483;fontColor=#E0E0E0;fontSize=9;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="50" y="95" width="180" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="f2_weather" value="Weather MCP&#xa;&#xa;14-day forecast:&#xa;Heavy rainfall predicted&#xa;Humidity index: 92%" style="rounded=1;whiteSpace=wrap;fillColor=#0f3460;strokeColor=#533483;fontColor=#E0E0E0;fontSize=9;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="280" y="95" width="170" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="f2_sales" value="Sales Analytics MCP&#xa;&#xa;Paracetamol 650mg&#xa;velocity up 180%&#xa;vs last week" style="rounded=1;whiteSpace=wrap;fillColor=#0f3460;strokeColor=#533483;fontColor=#E0E0E0;fontSize=9;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="500" y="95" width="170" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="f2_pulse" value="PULSE agent&#xa;&#xa;Combines 3 signals:&#xa;Disease + Weather + Sales&#xa;&#xa;Prediction: Dengue spike&#xa;Confidence: 91%&#xa;Arrival: 7-10 days&#xa;Affected: 18 stores" style="rounded=1;whiteSpace=wrap;fillColor=#533483;strokeColor=#3c1f6e;fontColor=#FFFFFF;fontSize=9;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="750" y="85" width="190" height="95" as="geometry"/>
+        </mxCell>
+        <mxCell id="f2_state" value="Shared State Updated:&#xa;&#xa;zone_east_delhi = ALERT&#xa;demand_multiplier = 4x&#xa;sku_priority = dengue_kit,&#xa;paracetamol, platelet_supp" style="rounded=1;whiteSpace=wrap;fillColor=#0f3460;strokeColor=#e94560;fontColor=#E0E0E0;fontSize=9;align=left;spacingLeft=8;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1010" y="85" width="200" height="95" as="geometry"/>
+        </mxCell>
+
+        <!-- Row 1 arrows -->
+        <mxCell id="b1" style="rounded=0;strokeColor=#E0E0E0;strokeWidth=2;exitX=1;exitY=0.5;entryX=0;entryY=0.3;" edge="1" parent="1" source="f2_idsp" target="f2_pulse">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="b2" style="rounded=0;strokeColor=#E0E0E0;strokeWidth=2;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="f2_weather" target="f2_pulse">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="b3" style="rounded=0;strokeColor=#E0E0E0;strokeWidth=2;exitX=1;exitY=0.5;entryX=0;entryY=0.7;" edge="1" parent="1" source="f2_sales" target="f2_pulse">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="b4" style="rounded=0;strokeColor=#E0E0E0;strokeWidth=2;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="f2_pulse" target="f2_state">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- DIVIDER -->
+        <mxCell id="div2_1" value="" style="line;strokeColor=#636e72;strokeWidth=1;dashed=1;dashPattern=4 4;" vertex="1" parent="1">
+          <mxGeometry x="40" y="205" width="1300" height="1" as="geometry"/>
+        </mxCell>
+
+        <!-- ROW 2: CROSS-AGENT COORDINATION -->
+        <mxCell id="sn2_2" value="STEP 2: CROSS-AGENT COORDINATION (PULSE notifies SOMA via Shared State)" style="text;html=0;align=left;fontSize=9;fontStyle=1;fontColor=#e94560;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="50" y="215" width="500" height="15" as="geometry"/>
+        </mxCell>
+        <mxCell id="f2_soma_read" value="SOMA reads state:&#xa;demand_multiplier = 4x&#xa;&#xa;Calculates:&#xa;18 stores need +2 pharmacists&#xa;per shift during peak hours&#xa;to handle patient volume" style="rounded=1;whiteSpace=wrap;fillColor=#e94560;strokeColor=#c81d45;fontColor=#FFFFFF;fontSize=9;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="50" y="235" width="220" height="85" as="geometry"/>
+        </mxCell>
+        <mxCell id="f2_pulse_order" value="PULSE calculates reorder:&#xa;&#xa;Dengue test kits: 4x qty&#xa;Paracetamol 650mg: 5x qty&#xa;Platelet supplements: 3x qty&#xa;Mosq. repellent: 2x qty&#xa;&#xa;Total order value: 4.8L" style="rounded=1;whiteSpace=wrap;fillColor=#533483;strokeColor=#3c1f6e;fontColor=#FFFFFF;fontSize=9;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="340" y="235" width="210" height="85" as="geometry"/>
+        </mxCell>
+
+        <!-- Arrow to critique -->
+        <mxCell id="b5" value="To Critique" style="rounded=0;strokeColor=#00d2d3;strokeWidth=2;fontSize=8;fontStyle=1;fontColor=#00d2d3;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="f2_pulse_order" target="f2_vigil">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- ROW 2B: CRITIQUE -->
+        <mxCell id="f2_vigil" value="VIGIL: Reorder qty within&#xa;emergency procurement rules&#xa;PASS" style="rounded=1;whiteSpace=wrap;fillColor=#00b894;strokeColor=#00a381;fontColor=#FFFFFF;fontSize=9;align=center;" vertex="1" parent="1">
+          <mxGeometry x="630" y="240" width="190" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="f2_audit2" value="AUDIT: 4.8L order cost vs&#xa;18L projected revenue protect&#xa;ROI = 3.75x   PASS" style="rounded=1;whiteSpace=wrap;fillColor=#0984e3;strokeColor=#0767b6;fontColor=#FFFFFF;fontSize=9;align=center;" vertex="1" parent="1">
+          <mxGeometry x="870" y="240" width="200" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="b5b" style="rounded=0;strokeColor=#E0E0E0;strokeWidth=2;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="f2_vigil" target="f2_audit2">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="f2_pass" value="BOTH&#xa;PASS" style="rhombus;whiteSpace=wrap;fillColor=#fdcb6e;strokeColor=#e17055;fontColor=#2d3436;fontSize=10;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="1120" y="237" width="80" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="b5c" style="rounded=0;strokeColor=#E0E0E0;strokeWidth=2;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="f2_audit2" target="f2_pass">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- DIVIDER -->
+        <mxCell id="div2_2" value="" style="line;strokeColor=#636e72;strokeWidth=1;dashed=1;dashPattern=4 4;" vertex="1" parent="1">
+          <mxGeometry x="40" y="345" width="1300" height="1" as="geometry"/>
+        </mxCell>
+
+        <!-- ROW 3: HITL -->
+        <mxCell id="sn2_3" value="STEP 3: HITL ROUTING" style="text;html=0;align=left;fontSize=9;fontStyle=1;fontColor=#fdcb6e;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="50" y="355" width="200" height="15" as="geometry"/>
+        </mxCell>
+        <mxCell id="f2_yellow_lane" value="Reorder = 4.8L&#xa;Multiplier = 4x-5x&#xa;---&#xa;YELLOW LANE&#xa;Needs manager approval" style="rounded=1;whiteSpace=wrap;fillColor=#fdcb6e;strokeColor=#e17055;fontColor=#2d3436;fontSize=10;align=center;" vertex="1" parent="1">
+          <mxGeometry x="50" y="375" width="210" height="75" as="geometry"/>
+        </mxCell>
+        <mxCell id="f2_shift_green" value="Shift adjustments&#xa;---&#xa;GREEN LANE&#xa;Auto-approved&#xa;(routine staffing)" style="rounded=1;whiteSpace=wrap;fillColor=#00b894;strokeColor=#00a381;fontColor=#FFFFFF;fontSize=10;align=center;" vertex="1" parent="1">
+          <mxGeometry x="310" y="375" width="190" height="75" as="geometry"/>
+        </mxCell>
+        <mxCell id="f2_mgr" value="Ops Manager reviews:&#xa;&#xa;- Epidemic evidence (IDSP)&#xa;- Weather correlation&#xa;- ROI projection&#xa;- Critique results&#xa;&#xa;Decision: APPROVED" style="rounded=1;whiteSpace=wrap;fillColor=#6c5ce7;strokeColor=#4834d4;fontColor=#FFFFFF;fontSize=9;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="590" y="365" width="190" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="b6" style="rounded=0;strokeColor=#fdcb6e;strokeWidth=2;dashed=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="f2_yellow_lane" target="f2_mgr">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- DIVIDER -->
+        <mxCell id="div2_3" value="" style="line;strokeColor=#636e72;strokeWidth=1;dashed=1;dashPattern=4 4;" vertex="1" parent="1">
+          <mxGeometry x="40" y="480" width="1300" height="1" as="geometry"/>
+        </mxCell>
+
+        <!-- ROW 4: EXECUTION -->
+        <mxCell id="sn2_4" value="STEP 4: EXECUTION (10 days BEFORE the stockout would have occurred)" style="text;html=0;align=left;fontSize=9;fontStyle=1;fontColor=#E0E0E0;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="50" y="490" width="450" height="15" as="geometry"/>
+        </mxCell>
+        <mxCell id="f2_e1" value="Distributor MCP:&#xa;priority_order()&#xa;&#xa;4 SKUs across&#xa;18 stores" style="rounded=1;whiteSpace=wrap;fillColor=#533483;strokeColor=#3c1f6e;fontColor=#FFFFFF;fontSize=9;align=center;" vertex="1" parent="1">
+          <mxGeometry x="50" y="510" width="140" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="f2_e2" value="HRMS MCP:&#xa;assign_shift()&#xa;&#xa;+2 pharmacists&#xa;per shift x 18 stores" style="rounded=1;whiteSpace=wrap;fillColor=#00b894;strokeColor=#00a381;fontColor=#FFFFFF;fontSize=9;align=center;" vertex="1" parent="1">
+          <mxGeometry x="230" y="510" width="150" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="f2_e3" value="ERP MCP:&#xa;allocate_shelf_space()&#xa;&#xa;Dengue category&#xa;Priority placement" style="rounded=1;whiteSpace=wrap;fillColor=#e94560;strokeColor=#c81d45;fontColor=#FFFFFF;fontSize=9;align=center;" vertex="1" parent="1">
+          <mxGeometry x="420" y="510" width="160" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="f2_e4" value="Notifications:&#xa;&#xa;18 store managers&#xa;Zone supervisor&#xa;Supply chain head" style="rounded=1;whiteSpace=wrap;fillColor=#6c5ce7;strokeColor=#4834d4;fontColor=#FFFFFF;fontSize=9;align=center;" vertex="1" parent="1">
+          <mxGeometry x="620" y="510" width="150" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="f2_e5" value="Audit Log:&#xa;&#xa;Epidemic response&#xa;logged with full&#xa;evidence chain" style="rounded=1;whiteSpace=wrap;fillColor=#636e72;strokeColor=#2d3436;fontColor=#FFFFFF;fontSize=9;align=center;" vertex="1" parent="1">
+          <mxGeometry x="810" y="510" width="140" height="70" as="geometry"/>
+        </mxCell>
+
+        <!-- Row 4 arrows -->
+        <mxCell id="b7" style="rounded=0;strokeColor=#E0E0E0;strokeWidth=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="f2_e1" target="f2_e2">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="b8" style="rounded=0;strokeColor=#E0E0E0;strokeWidth=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="f2_e2" target="f2_e3">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="b9" style="rounded=0;strokeColor=#E0E0E0;strokeWidth=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="f2_e3" target="f2_e4">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="b10" style="rounded=0;strokeColor=#E0E0E0;strokeWidth=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="f2_e4" target="f2_e5">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- OUTCOME -->
+        <mxCell id="outcome2" value="OUTCOME: Stockout prevented 10 days early.  18L revenue protected.  Patient relationships retained.  Zero manual intervention needed." style="rounded=1;whiteSpace=wrap;fillColor=#1a1a2e;strokeColor=#533483;fontColor=#E0E0E0;fontSize=11;fontStyle=1;align=center;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="150" y="620" width="900" height="40" as="geometry"/>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+
+  <!-- ================================================================ -->
+  <!-- FLOW 3: NEAR-EXPIRY DETECTION                                    -->
+  <!-- ================================================================ -->
+  <diagram id="flow3" name="Flow 3 - Near-Expiry and Staffing">
+    <mxGraphModel dx="1600" dy="1200" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="550" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <!-- TITLE -->
+        <mxCell id="t3" value="FLOW 3: Near-Expiry Detection + Compliance Staffing   (SOMA Agent Pipeline)" style="text;html=0;align=center;verticalAlign=middle;fontSize=16;fontStyle=1;fontColor=#1a1a2e;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="200" y="15" width="800" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- ROW 1 -->
+        <mxCell id="sn3_1" value="NEAR-EXPIRY FLOW" style="text;html=0;align=left;fontSize=9;fontStyle=1;fontColor=#0984e3;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="50" y="60" width="150" height="15" as="geometry"/>
+        </mxCell>
+        <mxCell id="f3_erp" value="Sales Analytics MCP&#xa;&#xa;SKU velocity for&#xa;Azithromycin 500mg&#xa;dropped 85% over 30 days" style="rounded=1;whiteSpace=wrap;fillColor=#0f3460;strokeColor=#533483;fontColor=#E0E0E0;fontSize=9;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="50" y="80" width="180" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="f3_soma" value="SOMA flags:&#xa;&#xa;2400 units expiring&#xa;in 75 days.&#xa;Current velocity = 8/day&#xa;Projected waste: 1800 units" style="rounded=1;whiteSpace=wrap;fillColor=#e94560;strokeColor=#c81d45;fontColor=#FFFFFF;fontSize=9;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="300" y="80" width="190" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="f3_action" value="SOMA proposes:&#xa;&#xa;1. Markdown 20% now&#xa;2. Transfer 800 units to&#xa;   3 high-velocity stores&#xa;3. Alert procurement to&#xa;   reduce next reorder" style="rounded=1;whiteSpace=wrap;fillColor=#e94560;strokeColor=#c81d45;fontColor=#FFFFFF;fontSize=9;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="560" y="75" width="190" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="f3_auto" value="GREEN LANE&#xa;Auto-approved&#xa;&#xa;Markdown + Transfer&#xa;executed via ERP MCP" style="rounded=1;whiteSpace=wrap;fillColor=#00b894;strokeColor=#00a381;fontColor=#FFFFFF;fontSize=9;align=center;" vertex="1" parent="1">
+          <mxGeometry x="820" y="80" width="170" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="f3_result" value="RESULT:&#xa;1800 units saved&#xa;from expiry&#xa;0.9L recovered" style="rounded=1;whiteSpace=wrap;fillColor=#1a1a2e;strokeColor=#0984e3;fontColor=#E0E0E0;fontSize=9;fontStyle=1;align=center;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1060" y="80" width="140" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="c1" style="rounded=0;strokeColor=#E0E0E0;strokeWidth=2;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="f3_erp" target="f3_soma">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="c2" style="rounded=0;strokeColor=#E0E0E0;strokeWidth=2;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="f3_soma" target="f3_action">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="c3" style="rounded=0;strokeColor=#E0E0E0;strokeWidth=2;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="f3_action" target="f3_auto">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="c4" style="rounded=0;strokeColor=#E0E0E0;strokeWidth=2;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="f3_auto" target="f3_result">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- DIVIDER -->
+        <mxCell id="div3_1" value="" style="line;strokeColor=#636e72;strokeWidth=1;dashed=1;dashPattern=4 4;" vertex="1" parent="1">
+          <mxGeometry x="40" y="180" width="1300" height="1" as="geometry"/>
+        </mxCell>
+
+        <!-- ROW 2: STAFFING COMPLIANCE -->
+        <mxCell id="sn3_2" value="STAFFING COMPLIANCE FLOW" style="text;html=0;align=left;fontSize=9;fontStyle=1;fontColor=#d63031;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="50" y="195" width="200" height="15" as="geometry"/>
+        </mxCell>
+        <mxCell id="f3_hrms" value="HRMS Roster MCP&#xa;&#xa;Tomorrow 7-9am shift&#xa;at Store #88:&#xa;No pharmacist assigned" style="rounded=1;whiteSpace=wrap;fillColor=#0f3460;strokeColor=#533483;fontColor=#E0E0E0;fontSize=9;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="50" y="215" width="180" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="f3_soma2" value="SOMA detects:&#xa;&#xa;Schedule H violation risk&#xa;7-9am = peak prescription&#xa;Drugs Act requires&#xa;pharmacist on duty" style="rounded=1;whiteSpace=wrap;fillColor=#e94560;strokeColor=#c81d45;fontColor=#FFFFFF;fontSize=9;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="300" y="215" width="190" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="f3_vigil" value="VIGIL validates:&#xa;&#xa;Drugs Act Section 18&#xa;requires pharmacist&#xa;Non-compliance = legal risk&#xa;RESULT: HIGH PRIORITY" style="rounded=1;whiteSpace=wrap;fillColor=#00b894;strokeColor=#00a381;fontColor=#FFFFFF;fontSize=9;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="560" y="212" width="190" height="76" as="geometry"/>
+        </mxCell>
+        <mxCell id="f3_yellow" value="YELLOW LANE&#xa;&#xa;System assigns nearest&#xa;available pharmacist&#xa;Manager confirms via app" style="rounded=1;whiteSpace=wrap;fillColor=#fdcb6e;strokeColor=#e17055;fontColor=#2d3436;fontSize=9;align=center;" vertex="1" parent="1">
+          <mxGeometry x="820" y="215" width="180" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="f3_result2" value="RESULT:&#xa;Compliance gap&#xa;closed 24hrs&#xa;before the shift" style="rounded=1;whiteSpace=wrap;fillColor=#1a1a2e;strokeColor=#d63031;fontColor=#E0E0E0;fontSize=9;fontStyle=1;align=center;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1060" y="215" width="140" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="c5" style="rounded=0;strokeColor=#E0E0E0;strokeWidth=2;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="f3_hrms" target="f3_soma2">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="c6" style="rounded=0;strokeColor=#E0E0E0;strokeWidth=2;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="f3_soma2" target="f3_vigil">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="c7" style="rounded=0;strokeColor=#E0E0E0;strokeWidth=2;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="f3_vigil" target="f3_yellow">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="c8" style="rounded=0;strokeColor=#E0E0E0;strokeWidth=2;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="f3_yellow" target="f3_result2">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

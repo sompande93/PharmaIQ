@@ -1,0 +1,113 @@
+{
+    "staff": [
+        {
+            "staff_id": "STAFF_001",
+            "name": "Dr. Priya Sharma",
+            "role": "pharmacist",
+            "store_id": "STORE_142",
+            "is_registered_pharmacist": true,
+            "shifts": [
+                {
+                    "day": "2026-03-11",
+                    "start": "09:00",
+                    "end": "17:00"
+                },
+                {
+                    "day": "2026-03-12",
+                    "start": "09:00",
+                    "end": "17:00"
+                }
+            ]
+        },
+        {
+            "staff_id": "STAFF_002",
+            "name": "Rajesh Kumar",
+            "role": "pharmacist",
+            "store_id": "STORE_142",
+            "is_registered_pharmacist": true,
+            "shifts": [
+                {
+                    "day": "2026-03-11",
+                    "start": "17:00",
+                    "end": "22:00"
+                },
+                {
+                    "day": "2026-03-12",
+                    "start": "17:00",
+                    "end": "22:00"
+                }
+            ]
+        },
+        {
+            "staff_id": "STAFF_003",
+            "name": "Anita Desai",
+            "role": "pharmacist",
+            "store_id": "STORE_088",
+            "is_registered_pharmacist": true,
+            "shifts": [
+                {
+                    "day": "2026-03-11",
+                    "start": "09:00",
+                    "end": "17:00"
+                },
+                {
+                    "day": "2026-03-12",
+                    "start": "09:00",
+                    "end": "17:00"
+                }
+            ]
+        },
+        {
+            "staff_id": "STAFF_004",
+            "name": "Vikram Singh",
+            "role": "pharmacy_assistant",
+            "store_id": "STORE_088",
+            "is_registered_pharmacist": false,
+            "shifts": [
+                {
+                    "day": "2026-03-11",
+                    "start": "07:00",
+                    "end": "15:00"
+                },
+                {
+                    "day": "2026-03-12",
+                    "start": "07:00",
+                    "end": "15:00"
+                }
+            ]
+        },
+        {
+            "staff_id": "STAFF_005",
+            "name": "Meera Patel",
+            "role": "pharmacist",
+            "store_id": "STORE_088",
+            "is_registered_pharmacist": true,
+            "shifts": [
+                {
+                    "day": "2026-03-11",
+                    "start": "15:00",
+                    "end": "22:00"
+                }
+            ]
+        },
+        {
+            "staff_id": "STAFF_006",
+            "name": "Amit Tiwari",
+            "role": "pharmacist",
+            "store_id": "STORE_055",
+            "is_registered_pharmacist": true,
+            "shifts": [
+                {
+                    "day": "2026-03-11",
+                    "start": "10:00",
+                    "end": "18:00"
+                },
+                {
+                    "day": "2026-03-12",
+                    "start": "10:00",
+                    "end": "18:00"
+                }
+            ]
+        }
+    ]
+}

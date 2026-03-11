@@ -1,0 +1,90 @@
+{
+    "fridges": [
+        {
+            "fridge_id": "FRIDGE_142_01",
+            "store_id": "STORE_142",
+            "current_temp": 4.5,
+            "target_temp": 4.0,
+            "status": "normal",
+            "contents": [
+                "insulin_humalog",
+                "insulin_lantus",
+                "hepatitis_b_vaccine"
+            ],
+            "last_maintenance": "2026-02-15",
+            "breach_history": []
+        },
+        {
+            "fridge_id": "FRIDGE_142_02",
+            "store_id": "STORE_142",
+            "current_temp": 3.8,
+            "target_temp": 4.0,
+            "status": "normal",
+            "contents": [
+                "covid_vaccine",
+                "flu_vaccine",
+                "eye_drops_latanoprost"
+            ],
+            "last_maintenance": "2026-02-20",
+            "breach_history": []
+        },
+        {
+            "fridge_id": "FRIDGE_142_03",
+            "store_id": "STORE_142",
+            "current_temp": 9.2,
+            "target_temp": 4.0,
+            "status": "breach",
+            "contents": [
+                "insulin_novolog",
+                "insulin_tresiba"
+            ],
+            "last_maintenance": "2026-01-10",
+            "breach_history": [
+                {
+                    "timestamp": "2026-03-11T02:17:00",
+                    "temp": 9.2,
+                    "duration_minutes": 47
+                }
+            ]
+        },
+        {
+            "fridge_id": "FRIDGE_088_01",
+            "store_id": "STORE_088",
+            "current_temp": 4.2,
+            "target_temp": 4.0,
+            "status": "normal",
+            "contents": [
+                "insulin_humalog",
+                "mmr_vaccine"
+            ],
+            "last_maintenance": "2026-03-01",
+            "breach_history": []
+        },
+        {
+            "fridge_id": "FRIDGE_088_02",
+            "store_id": "STORE_088",
+            "current_temp": 5.1,
+            "target_temp": 4.0,
+            "status": "normal",
+            "contents": [
+                "flu_vaccine",
+                "rabies_vaccine"
+            ],
+            "last_maintenance": "2026-02-28",
+            "breach_history": []
+        },
+        {
+            "fridge_id": "FRIDGE_201_01",
+            "store_id": "STORE_201",
+            "current_temp": 3.9,
+            "target_temp": 4.0,
+            "status": "normal",
+            "contents": [
+                "insulin_lantus",
+                "hepatitis_b_vaccine"
+            ],
+            "last_maintenance": "2026-03-05",
+            "breach_history": []
+        }
+    ]
+}
