@@ -130,7 +130,7 @@ def _extract_proposed_actions(analysis: str, agent_name: str) -> list[dict]:
     for line in lines:
         line_lower = line.lower().strip()
 
-        if "reorder" in line_lower or "order" in line_lower or "stock" in line_lower and "action" in line_lower:
+        if "reorder" in line_lower or "order" in line_lower or "stock" in line_lower:
             if current_action:
                 actions.append(current_action)
             current_action = {
@@ -139,6 +139,7 @@ def _extract_proposed_actions(analysis: str, agent_name: str) -> list[dict]:
                 "proposed_by": agent_name,
                 "description": line.strip("- *#"),
                 "lane": "yellow",
+                "metadata": {}
             }
         elif "notify" in line_lower or "alert" in line_lower:
             if current_action:
@@ -149,19 +150,34 @@ def _extract_proposed_actions(analysis: str, agent_name: str) -> list[dict]:
                 "proposed_by": agent_name,
                 "description": line.strip("- *#"),
                 "lane": "green",
+                "metadata": {}
             }
-        elif "store_id" in line_lower and current_action:
-            match = re.search(r'STORE_\d+', line)
-            if match:
-                current_action["store_id"] = match.group()
-        elif ("value" in line_lower or "cost" in line_lower or "₹" in line) and current_action:
-            nums = re.findall(r'[\d,]+\.?\d*', line)
-            if nums:
-                val = float(nums[0].replace(",", ""))
-                if "cost" in line_lower:
-                    current_action["estimated_cost"] = val
-                else:
-                    current_action["estimated_value"] = val
+        
+        # Extract metadata
+        if current_action:
+            if "store_id" in line_lower or "store_" in line_lower:
+                match = re.search(r'STORE_\d+', line)
+                if match:
+                    current_action["store_id"] = match.group()
+            
+            if "sku_id" in line_lower or "sku_" in line_lower:
+                match = re.search(r'[A-Z0-9_]+_\d+', line)
+                if match:
+                    current_action["metadata"]["sku_id"] = match.group()
+            
+            if "quantity" in line_lower:
+                nums = re.findall(r'\d+', line)
+                if nums:
+                    current_action["metadata"]["quantity"] = int(nums[0])
+
+            if ("value" in line_lower or "cost" in line_lower or "₹" in line):
+                nums = re.findall(r'[\d,]+\.?\d*', line)
+                if nums:
+                    val = float(nums[0].replace(",", ""))
+                    if "cost" in line_lower:
+                        current_action["estimated_cost"] = val
+                    else:
+                        current_action["estimated_value"] = val
 
     if current_action:
         actions.append(current_action)
@@ -170,5 +186,6 @@ def _extract_proposed_actions(analysis: str, agent_name: str) -> list[dict]:
         action.setdefault("store_id", "STORE_088")
         action.setdefault("estimated_value", 0)
         action.setdefault("estimated_cost", 0)
+        action.setdefault("metadata", {})
 
     return actions

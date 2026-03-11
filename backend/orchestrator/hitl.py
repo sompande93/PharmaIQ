@@ -59,23 +59,27 @@ def _determine_lane(action: dict) -> str:
     """Determine HITL lane based on action type, cost, and risk."""
     action_type = action.get("action_type", "")
     cost = action.get("estimated_cost", 0)
-    quantity = action.get("metadata", {}).get("quantity", 0)
+    metadata = action.get("metadata", {})
+    quantity = metadata.get("quantity", 0)
 
-    # Safety actions are always auto-approved (GREEN) if they are simple removals
-    safety_actions = ["quarantine_batch", "shelf_removal"]
-    if action_type in safety_actions:
+    # Safety actions are always auto-approved (GREEN) if they are simple removals/markdowns
+    # but ONLY if cost is low.
+    if action_type in ["quarantine_batch", "markdown_trigger"] and cost < 10000:
         return "green"
 
-    # High-quantity reorders always need review (YELLOW)
-    if action_type == "reorder_stock" and quantity > 500:
+    # Staffing changes ALWAYS need manager sign-off (YELLOW) in this version to demo HITL
+    if action_type == "shift_reallocation":
         return "yellow"
 
-    # Stock transfers between stores always need manager sign-off (YELLOW)
+    # High-quantity reorders or stock transfers always need review (YELLOW)
+    if action_type == "reorder_stock" and (quantity > 100 or cost > 20000):
+        return "yellow"
+
     if action_type == "stock_transfer":
         return "yellow"
 
-    # Cost-based routing (Lowered for demo visibility)
-    if cost <= 50000:  # ₹50k instead of ₹2L
+    # Default routing based on cost
+    if cost <= 5000:
         return "green"
     elif cost <= settings.YELLOW_LANE_MAX_VALUE:
         return "yellow"

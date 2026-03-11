@@ -3,7 +3,7 @@ PharmaIQ API — Pipeline Routes
 Endpoints for running the agent pipeline and inspecting results.
 """
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, BackgroundTasks
 from orchestrator.graph import run_pipeline
 from datetime import datetime
 
@@ -35,78 +35,91 @@ def save_run(run_id, data):
     except Exception:
         pass
 
+async def persistence_callback(state: dict):
+    """Callback to save intermediate graph state to disk."""
+    run_id = state.get("run_id")
+    if not run_id:
+        return
+    
+    # Enrich state with derived fields for the list view
+    enriched_state = state.copy()
+    enriched_state["status"] = "complete" if state.get("completed_at") else "running"
+    
+    save_run(run_id, enriched_state)
+
 @router.post("/run")
-async def trigger_pipeline():
+async def trigger_pipeline(background_tasks: BackgroundTasks):
     """
-    Trigger a full PharmaIQ pipeline run.
-    Collects signals → SOMA → PULSE → VIGIL → AUDIT → HITL → Execute
+    Trigger a full PharmaIQ pipeline run in the background.
     """
     try:
-        result = await run_pipeline()
-
-        run_id = result.get("run_id", f"RUN_{datetime.now().strftime('%H%M%S')}")
-        save_run(run_id, result)
-
-        # Build summary
-        summary = {
+        # Create a unique run_id immediately
+        import uuid
+        run_id = f"RUN_{uuid.uuid4().hex[:8]}"
+        
+        # Initial placeholder save
+        initial_data = {
             "run_id": run_id,
-            "status": "complete",
-            "started_at": result.get("started_at"),
-            "completed_at": result.get("completed_at"),
-            "signals_detected": {
-                "fridge_breaches": len(result.get("fridge_breaches", [])),
-                "disease_clusters": len(result.get("disease_clusters", [])),
-                "weather_alerts": len(result.get("weather_alerts", [])),
-                "shift_gaps": len(result.get("shift_gaps", [])),
-                "expiring_stock": len(result.get("expiring_stock", [])),
-            },
-            "actions_proposed": len(result.get("proposed_actions", [])),
-            "actions_auto_approved": len([
-                a for a in result.get("approved_actions", [])
-                if a.get("status") == "auto_approved"
-            ]),
-            "actions_awaiting_approval": len(result.get("actions_for_approval", [])),
-            "actions_executed": len(result.get("executed_actions", [])),
-            "soma_analysis_preview": (result.get("soma_analysis") or "")[:300],
-            "pulse_analysis_preview": (result.get("pulse_analysis") or "")[:300],
+            "status": "running",
+            "started_at": datetime.now().isoformat(),
+            "current_node": "START",
+            "actions_proposed": 0,
+            "actions_awaiting_approval": 0
         }
-        return summary
+        save_run(run_id, initial_data)
+
+        # Launch background task
+        background_tasks.add_task(run_pipeline, update_callback=persistence_callback)
+
+        return {
+            "run_id": run_id,
+            "status": "running",
+            "message": "Pipeline analysis started in background"
+        }
 
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Pipeline failed: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Failed to start pipeline: {str(e)}")
 
+
+def summarize_run(run_id, data):
+    """Helper to create a consistent summary for list view."""
+    return {
+        "run_id": run_id,
+        "started_at": data.get("started_at"),
+        "completed_at": data.get("completed_at"),
+        "status": data.get("status", "complete"),
+        "current_node": data.get("current_node", "END"),
+        "signals_detected": {
+            "fridge_breaches": len(data.get("fridge_breaches", [])),
+            "disease_clusters": len(data.get("disease_clusters", [])),
+            "weather_alerts": len(data.get("weather_alerts", [])),
+            "shift_gaps": len(data.get("shift_gaps", [])),
+            "expiring_stock": len(data.get("expiring_stock", [])),
+        },
+        "actions_proposed": len(data.get("proposed_actions", [])),
+        "actions_auto_approved": len([
+            a for a in data.get("approved_actions", [])
+            if a.get("status") == "auto_approved"
+        ]),
+        "actions_awaiting_approval": len(data.get("actions_for_approval", [])),
+        "actions_executed": len(data.get("executed_actions", [])),
+        "soma_analysis_preview": (data.get("soma_analysis") or "")[:300],
+        "pulse_analysis_preview": (data.get("pulse_analysis") or "")[:300],
+    }
 
 @router.get("/runs")
 async def list_runs():
     """List all pipeline runs."""
     runs_data = load_runs()
+    # Sort runs by started_at descending
+    sorted_runs = sorted(
+        runs_data.items(), 
+        key=lambda x: x[1].get("started_at", ""), 
+        reverse=True
+    )
     return {
         "total_runs": len(runs_data),
-        "runs": [
-            {
-                "run_id": run_id,
-                "started_at": data.get("started_at"),
-                "completed_at": data.get("completed_at"),
-                "status": "complete",
-                "signals_detected": {
-                    "fridge_breaches": len(data.get("fridge_breaches", [])),
-                    "disease_clusters": len(data.get("disease_clusters", [])),
-                    "weather_alerts": len(data.get("weather_alerts", [])),
-                    "shift_gaps": len(data.get("shift_gaps", [])),
-                    "expiring_stock": len(data.get("expiring_stock", [])),
-                },
-                "actions_proposed": len(data.get("proposed_actions", [])),
-                "actions_auto_approved": len([
-                    a for a in data.get("approved_actions", [])
-                    if a.get("status") == "auto_approved"
-                ]),
-                "actions_awaiting_approval": len(data.get("actions_for_approval", [])),
-                "actions_executed": len(data.get("executed_actions", [])),
-                "soma_analysis_preview": (data.get("soma_analysis") or "")[:300],
-                "pulse_analysis_preview": (data.get("pulse_analysis") or "")[:300],
-            }
-            for run_id, data in runs_data.items()
-        ]
+        "runs": [summarize_run(run_id, data) for run_id, data in sorted_runs]
     }
 
 
@@ -120,6 +133,8 @@ async def get_run(run_id: str):
     result = runs_data[run_id]
     return {
         "run_id": run_id,
+        "status": result.get("status", "complete"),
+        "current_node": result.get("current_node", "END"),
         "started_at": result.get("started_at"),
         "completed_at": result.get("completed_at"),
         "signals": {

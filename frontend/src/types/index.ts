@@ -28,7 +28,8 @@ export interface PipelineRun {
     run_id: string;
     started_at: string;
     completed_at?: string;
-    status: "complete" | "pending" | "failed";
+    status: "complete" | "pending" | "failed" | "running";
+    current_node?: string;
     signals_detected: {
         fridge_breaches: number;
         disease_clusters: number;

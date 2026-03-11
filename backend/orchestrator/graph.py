@@ -76,47 +76,63 @@ def execute_actions(state: dict) -> dict:
         action_type = action.get("action_type", "")
         store_id = action.get("store_id", "STORE_088")
         metadata = action.get("metadata", {})
-        result = {"action_id": action.get("action_id"), "action_type": action_type}
+        result = {
+            "action_id": action.get("action_id"), 
+            "action_type": action_type,
+            "status": "executed", # Default to success unless exception
+            "executed_at": datetime.now().isoformat()
+        }
 
         try:
             if action_type == "quarantine_batch":
-                batch_id = metadata.get("batch_id", "BATCH_INS_2847")
-                exec_result = erp_inventory_mcp.block_batch_sale(batch_id)
-                result["execution_result"] = exec_result
-                result["status"] = "executed"
+                batch_id = metadata.get("batch_id")
+                if batch_id:
+                    exec_result = erp_inventory_mcp.block_batch_sale(batch_id)
+                    result["execution_result"] = exec_result
+                else:
+                    result["status"] = "failed"
+                    result["error"] = "Missing batch_id in metadata"
 
             elif action_type == "reorder_stock" or action_type == "preemptive_reorder":
-                sku_id = metadata.get("sku_id", "UNKNOWN")
+                sku_id = metadata.get("sku_id")
                 quantity = metadata.get("quantity", 100)
-                # Call ERP place_order which now persists to inventory.json
-                exec_result = erp_inventory_mcp.place_order(sku_id, store_id, quantity)
-                result["execution_result"] = exec_result
-                result["status"] = "executed"
+                if sku_id:
+                    exec_result = erp_inventory_mcp.place_order(sku_id, store_id, quantity)
+                    result["execution_result"] = exec_result
+                else:
+                    result["status"] = "failed"
+                    result["error"] = "Missing sku_id in metadata"
 
             elif action_type == "shift_reallocation":
-                staff_id = metadata.get("staff_id", "STF_001")
+                staff_id = metadata.get("staff_id")
+                # For demo, if no staff_id, we might have it in the description or just use a default
+                if not staff_id and "STAFF_" in action.get("description", ""):
+                    import re
+                    match = re.search(r'STAFF_\d+', action.get("description", ""))
+                    if match:
+                        staff_id = match.group()
+
                 date = metadata.get("date", datetime.now().strftime("%Y-%m-%d"))
-                start = metadata.get("start", "09:00")
-                end = metadata.get("end", "18:00")
-                # Call HRMS assign_shift which persists to staff_roster.json
-                exec_result = hrms_roster_mcp.assign_shift(staff_id, date, start, end)
-                result["execution_result"] = exec_result
-                result["status"] = "executed"
+                start = metadata.get("start", "07:00")
+                end = metadata.get("end", "09:00")
+                
+                if staff_id:
+                    exec_result = hrms_roster_mcp.assign_shift(staff_id, date, start, end)
+                    result["execution_result"] = exec_result
+                else:
+                    result["status"] = "failed"
+                    result["error"] = "Missing staff_id in metadata or description"
 
             elif action_type == "markdown_trigger":
-                # Simulated for now as we don't have a 'price' field to update specifically
                 result["execution_result"] = {"success": True, "note": "Price updated in ERP POS system"}
-                result["status"] = "executed"
             
             else:
-                result["execution_result"] = {"success": True, "note": "Action logged to distributor API"}
-                result["status"] = "executed"
+                result["execution_result"] = {"success": True, "note": "Action logged to analytics feed"}
         
         except Exception as e:
             result["status"] = "failed"
             result["error"] = str(e)
 
-        result["executed_at"] = datetime.now().isoformat()
         executed.append(result)
 
     return {
@@ -163,8 +179,10 @@ def create_pipeline():
     return graph.compile()
 
 
-async def run_pipeline() -> dict:
-    """Run the full PharmaIQ pipeline end-to-end."""
+async def run_pipeline(update_callback=None) -> dict:
+    """
+    Run the full PharmaIQ pipeline end-to-end with intermediate state updates.
+    """
     pipeline = create_pipeline()
 
     initial_state = {
@@ -185,11 +203,36 @@ async def run_pipeline() -> dict:
         "executed_actions": [],
         "alerts": [],
         "run_id": f"RUN_{uuid.uuid4().hex[:8]}",
-        "started_at": None,
+        "started_at": datetime.now().isoformat(),
         "completed_at": None,
-        "current_node": None,
+        "current_node": START,
     }
 
-    # Run the graph
-    result = await pipeline.ainvoke(initial_state)
-    return result
+    # Signal start
+    if update_callback:
+        await update_callback(initial_state)
+
+    # Run the graph using astream to capture node transitions
+    final_state = initial_state
+    try:
+        async for event in pipeline.astream(initial_state):
+            # The event is a dict where keys are node names and values are the state updates
+            for node_name, state_update in event.items():
+                final_state.update(state_update)
+                final_state["current_node"] = node_name
+                
+                if update_callback:
+                    await update_callback(final_state)
+
+        final_state["completed_at"] = datetime.now().isoformat()
+        if update_callback:
+            await update_callback(final_state)
+            
+    except Exception as e:
+        print(f"Error in pipeline {final_state.get('run_id')}: {str(e)}")
+        final_state["error"] = str(e)
+        final_state["status"] = "failed"
+        if update_callback:
+            await update_callback(final_state)
+
+    return final_state

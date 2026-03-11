@@ -35,11 +35,11 @@
       "schedule": "none",
       "store_id": "STORE_088",
       "batch_id": "BATCH_DNG_4401",
-      "quantity": 120,
+      "quantity": 15,
       "unit_price": 350,
       "expiry_date": "2026-12-01",
       "fridge_id": null,
-      "daily_velocity": 5,
+      "daily_velocity": 25,
       "status": "active"
     },
     {
@@ -77,11 +77,11 @@
       "schedule": "none",
       "store_id": "STORE_088",
       "batch_id": "BATCH_MOS_1105",
-      "quantity": 500,
+      "quantity": 20,
       "unit_price": 95,
       "expiry_date": "2027-06-01",
       "fridge_id": null,
-      "daily_velocity": 12,
+      "daily_velocity": 45,
       "status": "active"
     }
   ]

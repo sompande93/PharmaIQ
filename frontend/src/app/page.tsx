@@ -24,19 +24,33 @@ export default function Dashboard() {
   const [runs, setRuns] = useState<PipelineRun[]>([]);
   const [loading, setLoading] = useState(true);
   const [triggering, setTriggering] = useState(false);
+  const [activeRunId, setActiveRunId] = useState<string | null>(null);
 
   useEffect(() => {
     fetchRuns();
   }, []);
 
+  // Polling for active runs
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+
+    const hasActiveRun = runs.some(r => r.status === "running");
+    if (hasActiveRun) {
+      interval = setInterval(fetchRuns, 3000); // Poll every 3 seconds
+    }
+
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [runs]);
+
   const fetchRuns = async () => {
     try {
-      setLoading(true);
       const data = await apiService.listRuns();
       setRuns(data.runs);
+      setLoading(false);
     } catch (error) {
       console.error("Failed to fetch runs", error);
-    } finally {
       setLoading(false);
     }
   };
@@ -44,7 +58,8 @@ export default function Dashboard() {
   const handleTrigger = async () => {
     try {
       setTriggering(true);
-      await apiService.runPipeline();
+      const result = await apiService.runPipeline();
+      setActiveRunId(result.run_id);
       await fetchRuns();
     } catch (error) {
       console.error("Failed to trigger pipeline", error);
@@ -52,6 +67,25 @@ export default function Dashboard() {
       setTriggering(false);
     }
   };
+
+  // Progress mapping
+  const getNodeProgress = (node: string | undefined): number => {
+    if (!node) return 0;
+    const progressMap: Record<string, number> = {
+      "START": 5,
+      "collect_signals": 15,
+      "soma": 30,
+      "pulse": 45,
+      "vigil": 60,
+      "audit": 75,
+      "hitl": 90,
+      "execute": 100,
+      "END": 100
+    };
+    return progressMap[node] || 0;
+  };
+
+  const activeRun = runs.find(r => r.status === "running");
 
   const stats = [
     {
@@ -109,6 +143,43 @@ export default function Dashboard() {
         </motion.div>
       )}
 
+      {/* Progress Banner for Active Run */}
+      {activeRun && (
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="p-6 rounded-2xl bg-primary/10 border border-primary/30 shadow-2xl shadow-primary/5"
+        >
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-3">
+              <div className="p-2 rounded-lg bg-primary/20 animate-pulse">
+                <Activity className="w-5 h-5 text-primary" />
+              </div>
+              <div>
+                <p className="text-sm font-bold text-white uppercase tracking-widest">Analysis in Progress: {activeRun.run_id}</p>
+                <p className="text-xs text-muted-foreground">Currently processing: <span className="text-primary font-mono uppercase">{activeRun.current_node?.replace(/_/g, " ")} Agent</span></p>
+              </div>
+            </div>
+            <span className="text-lg font-bold text-primary font-mono">{getNodeProgress(activeRun.current_node)}%</span>
+          </div>
+          <div className="w-full h-3 bg-white/5 rounded-full overflow-hidden border border-white/10 p-0.5">
+            <motion.div
+              className="h-full bg-gradient-to-r from-primary/50 to-primary rounded-full"
+              initial={{ width: "0%" }}
+              animate={{ width: `${getNodeProgress(activeRun.current_node)}%` }}
+              transition={{ duration: 0.5 }}
+            />
+          </div>
+          <div className="flex justify-between mt-3 text-[10px] text-muted-foreground font-medium uppercase tracking-tighter">
+            <span>Signals</span>
+            <span>Reasoning</span>
+            <span>Critique</span>
+            <span>HITL GATE</span>
+            <span className="text-primary">Execution</span>
+          </div>
+        </motion.div>
+      )}
+
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
@@ -116,13 +187,13 @@ export default function Dashboard() {
           <p className="text-muted-foreground">Multi-agent supply chain orchestration dashboard.</p>
         </div>
         <div className="flex gap-4">
-          <Button variant="outline" size="md" onClick={fetchRuns} disabled={loading}>
-            <RefreshCcw className={cn("w-4 h-4 mr-2", loading && "animate-spin")} />
+          <Button variant="outline" size="md" onClick={fetchRuns} disabled={loading || !!activeRun}>
+            <RefreshCcw className={cn("w-4 h-4 mr-2", loading && !activeRun && "animate-spin")} />
             Sync Data
           </Button>
-          <Button variant="primary" size="md" onClick={handleTrigger} disabled={triggering}>
-            <Play className={cn("w-4 h-4 mr-2", triggering && "animate-pulse")} />
-            Trigger Analysis
+          <Button variant="primary" size="md" onClick={handleTrigger} disabled={triggering || !!activeRun}>
+            <Play className={cn("w-4 h-4 mr-2", (triggering || !!activeRun) && "animate-pulse")} />
+            {activeRun ? "Analysis Running..." : "Trigger Analysis"}
           </Button>
         </div>
       </div>
@@ -163,7 +234,7 @@ export default function Dashboard() {
             <CardDescription>Live status of agent reasoning and decision flows.</CardDescription>
           </CardHeader>
           <CardContent>
-            {loading ? (
+            {loading && runs.length === 0 ? (
               <div className="py-12 flex flex-col items-center justify-center space-y-4">
                 <div className="w-12 h-12 border-4 border-primary/20 border-t-primary rounded-full animate-spin" />
                 <p className="text-sm text-muted-foreground">Fetching latest signals...</p>
@@ -186,8 +257,15 @@ export default function Dashboard() {
                   </thead>
                   <tbody className="divide-y divide-white/5">
                     {runs.map((run) => (
-                      <tr key={run.run_id} className="group hover:bg-white/[0.02] cursor-pointer">
-                        <td className="py-4">
+                      <tr
+                        key={run.run_id}
+                        className={cn(
+                          "group hover:bg-white/[0.02] cursor-pointer transition-colors",
+                          run.status === "running" && "bg-primary/5 border-l-2 border-l-primary"
+                        )}
+                        onClick={() => window.location.href = `/agents?runId=${run.run_id}`}
+                      >
+                        <td className="py-4 px-2">
                           <div className="flex flex-col">
                             <span className="text-sm font-medium text-white group-hover:text-primary transition-colors">
                               {run.run_id}
@@ -196,9 +274,14 @@ export default function Dashboard() {
                           </div>
                         </td>
                         <td className="py-4">
-                          <Badge variant={run.status === "complete" ? "success" : run.status === "pending" ? "warning" : "danger"}>
+                          <Badge variant={run.status === "complete" ? "success" : run.status === "running" ? "warning" : "danger"}>
                             {run.status.toUpperCase()}
                           </Badge>
+                          {run.status === "running" && (
+                            <span className="ml-2 text-[10px] text-muted-foreground animate-pulse uppercase">
+                              {run.current_node}
+                            </span>
+                          )}
                         </td>
                         <td className="py-4 text-center">
                           <div className="flex items-center justify-center gap-1.5">
@@ -209,7 +292,7 @@ export default function Dashboard() {
                         <td className="py-4 text-center">
                           <span className="text-sm font-semibold text-white">{run.actions_proposed || 0}</span>
                         </td>
-                        <td className="py-4 text-right">
+                        <td className="py-4 text-right pr-2">
                           <span className="text-xs text-muted-foreground italic">
                             {formatDate(run.started_at)}
                           </span>
