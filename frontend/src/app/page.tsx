@@ -86,6 +86,29 @@ export default function Dashboard() {
 
   return (
     <div className="p-8 space-y-8 max-w-7xl mx-auto">
+      {/* HITL Attention Banner */}
+      {runs.some(r => r.actions_awaiting_approval > 0) && (
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="p-4 rounded-xl bg-warning/10 border border-warning/30 flex items-center justify-between shadow-lg shadow-warning/5"
+        >
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-full bg-warning/20 flex items-center justify-center">
+              <AlertTriangle className="w-5 h-5 text-warning" />
+            </div>
+            <div>
+              <p className="text-sm font-bold text-white uppercase tracking-wider">Human Attention Required</p>
+              <p className="text-xs text-muted-foreground mt-0.5">High-value reorders or safety transfers are pending your authorization in the Safety Review panel.</p>
+            </div>
+          </div>
+          <Button variant="outline" size="sm" onClick={() => window.location.href = "/approvals"} className="border-warning/50 text-warning hover:bg-warning/10">
+            Go to Safety Review
+            <ChevronRight className="w-4 h-4 ml-1" />
+          </Button>
+        </motion.div>
+      )}
+
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>

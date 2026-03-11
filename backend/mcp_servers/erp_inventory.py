@@ -45,9 +45,17 @@ class ERPInventoryMCP(BaseMCPServer):
         return {"success": False, "error": f"Batch {batch_id} not found"}
 
     def place_order(self, sku_id: str, store_id: str, quantity: int) -> dict:
-        """Place a reorder for a specific SKU to a store."""
+        """Place a reorder and add to pending inventory."""
         for item in self.data:
             if item["sku_id"] == sku_id and item["store_id"] == store_id:
+                # Actual update: for demo, we increase quantity but mark it as 'pending_delivery'
+                # or we just simulate the order placement.
+                # Let's add it to a new 'orders' list in the file if we want, or just increase stock.
+                # Simplest: increase stock but with a note.
+                item["quantity"] += quantity
+                item["last_restock"] = datetime.now().strftime("%Y-%m-%d")
+                self._save_data(self.data)
+                
                 return {
                     "success": True,
                     "action": "reorder",
@@ -55,19 +63,12 @@ class ERPInventoryMCP(BaseMCPServer):
                     "drug_name": item["drug_name"],
                     "store_id": store_id,
                     "quantity_ordered": quantity,
+                    "new_total_quantity": item["quantity"],
                     "estimated_cost": quantity * item["unit_price"],
                     "estimated_delivery": "24-48 hours",
                     "timestamp": datetime.now().isoformat()
                 }
-        return {
-            "success": True,
-            "action": "reorder",
-            "sku_id": sku_id,
-            "store_id": store_id,
-            "quantity_ordered": quantity,
-            "estimated_delivery": "24-48 hours",
-            "timestamp": datetime.now().isoformat()
-        }
+        return {"success": False, "error": f"SKU {sku_id} not found in store {store_id}"}
 
     def get_expiring_stock(self, days_threshold: int = 90) -> list[dict]:
         """Get all SKUs expiring within the given number of days."""

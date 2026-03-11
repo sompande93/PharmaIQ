@@ -83,6 +83,13 @@ async def get_staff_gaps(store_id: str, date: Optional[str] = None):
     return gaps
 
 
+@router.get("/staff/{store_id}")
+async def get_staff(store_id: str, date: Optional[str] = None):
+    """Get the current staff roster and shifts for a store."""
+    staff = hrms_roster_mcp.get_current_staff(store_id, date)
+    return {"store_id": store_id, "staff": staff}
+
+
 @router.get("/demand/{store_id}")
 async def get_demand(store_id: str):
     """Get demand trends for a store."""

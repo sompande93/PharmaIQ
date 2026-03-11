@@ -58,4 +58,9 @@ export const apiService = {
         const response = await api.get("/stores/disease-alerts");
         return response.data;
     },
+
+    getStaff: async (storeId: string) => {
+        const response = await api.get(`/stores/staff/${storeId}`);
+        return response.data;
+    },
 };

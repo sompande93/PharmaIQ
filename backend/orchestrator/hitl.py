@@ -59,21 +59,23 @@ def _determine_lane(action: dict) -> str:
     """Determine HITL lane based on action type, cost, and risk."""
     action_type = action.get("action_type", "")
     cost = action.get("estimated_cost", 0)
+    quantity = action.get("metadata", {}).get("quantity", 0)
 
-    # Safety actions are always auto-approved (GREEN)
+    # Safety actions are always auto-approved (GREEN) if they are simple removals
     safety_actions = ["quarantine_batch", "shelf_removal"]
     if action_type in safety_actions:
         return "green"
 
-    # Low-value routine actions (GREEN)
-    if action_type == "markdown_trigger":
-        return "green"
+    # High-quantity reorders always need review (YELLOW)
+    if action_type == "reorder_stock" and quantity > 500:
+        return "yellow"
 
-    if action_type == "notify_manager":
-        return "green"
+    # Stock transfers between stores always need manager sign-off (YELLOW)
+    if action_type == "stock_transfer":
+        return "yellow"
 
-    # Cost-based routing
-    if cost <= settings.GREEN_LANE_MAX_VALUE:
+    # Cost-based routing (Lowered for demo visibility)
+    if cost <= 50000:  # ₹50k instead of ₹2L
         return "green"
     elif cost <= settings.YELLOW_LANE_MAX_VALUE:
         return "yellow"
