@@ -58,7 +58,7 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
   // Common animation variants
   const fadeInUP = {
     hidden: { opacity: 0, y: 50 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" } }
+    visible: { opacity: 1, y: 0, transition: { duration: 0.8 } }
   };
 
   const staggerContainer = {
@@ -79,7 +79,7 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
            initial={{ opacity: 0 }}
            animate={{ opacity: 1 }}
            exit={{ opacity: 0 }}
-           className="relative flex h-screen w-screen flex-col bg-gray-950 overflow-y-auto scroll-smooth custom-scrollbar"
+           className="relative flex h-screen w-screen flex-col bg-gray-950 overflow-y-auto scroll-smooth custom-scrollbar overflow-x-hidden min-h-0"
         >
           {/* Fixed Header */}
           <header className="fixed top-0 w-full z-50 flex items-center justify-between px-8 py-4 bg-gray-950/50 backdrop-blur-lg border-b border-white/5">
@@ -96,10 +96,10 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
           </header>
 
           {/* Section 1: Hero */}
-          <section className="relative flex min-h-screen flex-col items-center justify-center px-6 text-center pt-20">
+          <section className="relative flex min-h-screen w-full flex-col items-center justify-center px-4 md:px-6 text-center pt-24 pb-12 overflow-hidden shrink-0">
             {/* Ambient Background Glow */}
-            <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
-              <div className="absolute top-[20%] left-[50%] -translate-x-1/2 h-[800px] w-[800px] rounded-full bg-blue-900/10 blur-[120px]" />
+            <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none flex items-center justify-center">
+              <div className="h-[600px] w-[600px] md:h-[800px] md:w-[800px] rounded-full bg-blue-900/10 blur-[100px] md:blur-[120px]" />
             </div>
 
             <motion.div
@@ -107,7 +107,7 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true }}
-              className="z-10 max-w-5xl"
+              className="relative z-10 w-full max-w-5xl mx-auto flex flex-col items-center"
             >
               <motion.div variants={fadeInUP} className="inline-flex items-center gap-2 rounded-full border border-blue-500/30 bg-blue-500/10 px-4 py-1.5 mb-8">
                 <span className="flex h-2 w-2 rounded-full bg-blue-500 animate-pulse"></span>
@@ -145,24 +145,24 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
           </section>
 
           {/* Section 2: The Problem */}
-          <section id="problem" className="relative flex min-h-screen items-center justify-center py-24 px-6 bg-gradient-to-b from-gray-950 to-gray-900 border-t border-white/5">
-            <div className="z-10 w-full max-w-7xl">
+          <section id="problem" className="relative flex min-h-screen w-full items-center justify-center py-20 px-4 md:px-6 bg-gradient-to-b from-gray-950 to-gray-900 border-t border-white/5 shrink-0 overflow-hidden">
+            <div className="relative z-10 w-full max-w-7xl mx-auto flex flex-col items-center">
               <motion.div 
                 initial="hidden"
                 whileInView="visible"
-                viewport={{ once: true, margin: "-100px" }}
+                viewport={{ once: true, margin: "-50px" }}
                 variants={fadeInUP}
-                className="text-center mb-20"
+                className="text-center mb-16"
               >
                 <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">The Healthcare Retail Crisis</h2>
                 <p className="text-xl text-gray-400 max-w-2xl mx-auto">Traditional pharmacies rely on siloed, reactive systems. We're bleeding money and risking patient safety because we analyze data <span className="text-red-400 italic">after</span> the event.</p>
               </motion.div>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full justify-items-center">
                 {/* Problem 1 */}
                 <motion.div 
-                  initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }} variants={fadeInUP}
-                  className="group relative rounded-3xl border border-red-500/20 bg-gradient-to-br from-red-500/5 to-transparent p-8 backdrop-blur-md overflow-hidden"
+                  initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-20px" }} variants={fadeInUP}
+                  className="w-full max-w-[400px] group relative rounded-3xl border border-red-500/20 bg-gradient-to-br from-red-500/5 to-transparent p-6 md:p-8 backdrop-blur-md overflow-hidden flex flex-col items-center md:items-start text-center md:text-left"
                 >
                   <div className="absolute top-0 right-0 w-32 h-32 bg-red-500/10 rounded-full blur-3xl group-hover:bg-red-500/20 transition-all"></div>
                   <ExclamationTriangleIcon className="h-14 w-14 text-red-400 mb-6" />
@@ -174,8 +174,8 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
 
                 {/* Problem 2 */}
                 <motion.div 
-                  initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }} variants={fadeInUP} transition={{ delay: 0.2 }}
-                  className="group relative rounded-3xl border border-amber-500/20 bg-gradient-to-br from-amber-500/5 to-transparent p-8 backdrop-blur-md overflow-hidden"
+                  initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-20px" }} variants={fadeInUP} transition={{ delay: 0.2 }}
+                  className="w-full max-w-[400px] group relative rounded-3xl border border-amber-500/20 bg-gradient-to-br from-amber-500/5 to-transparent p-6 md:p-8 backdrop-blur-md overflow-hidden flex flex-col items-center md:items-start text-center md:text-left"
                 >
                   <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/10 rounded-full blur-3xl group-hover:bg-amber-500/20 transition-all"></div>
                   <ChartBarIcon className="h-14 w-14 text-amber-400 mb-6" />
@@ -187,8 +187,8 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
 
                 {/* Problem 3 */}
                 <motion.div 
-                  initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }} variants={fadeInUP} transition={{ delay: 0.4 }}
-                  className="group relative rounded-3xl border border-purple-500/20 bg-gradient-to-br from-purple-500/5 to-transparent p-8 backdrop-blur-md overflow-hidden"
+                  initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-20px" }} variants={fadeInUP} transition={{ delay: 0.4 }}
+                  className="w-full max-w-[400px] group relative rounded-3xl border border-purple-500/20 bg-gradient-to-br from-purple-500/5 to-transparent p-6 md:p-8 backdrop-blur-md overflow-hidden flex flex-col items-center md:items-start text-center md:text-left"
                 >
                   <div className="absolute top-0 right-0 w-32 h-32 bg-purple-500/10 rounded-full blur-3xl group-hover:bg-purple-500/20 transition-all"></div>
                   <ShieldCheckIcon className="h-14 w-14 text-purple-400 mb-6" />
@@ -202,25 +202,25 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
           </section>
 
           {/* Section 3: The Solution / Features */}
-          <section className="relative flex min-h-screen flex-col items-center py-24 px-6 overflow-hidden bg-gray-900 border-t border-white/5">
+          <section className="relative flex w-full flex-col items-center py-20 px-4 md:px-6 overflow-hidden bg-gray-900 border-t border-white/5 shrink-0 min-h-screen h-auto">
              {/* Tech grid background */}
              <div className="absolute inset-0 z-0 opacity-[0.03]" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)', backgroundSize: '40px 40px' }}></div>
              
-             <div className="z-10 w-full max-w-7xl">
+             <div className="relative z-10 w-full max-w-7xl mx-auto flex flex-col items-center">
                 <motion.div 
-                  initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={fadeInUP}
-                  className="text-center mb-20"
+                  initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }} variants={fadeInUP}
+                  className="text-center mb-16"
                 >
                   <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">Enter <span className="text-blue-500">PharmaIQ</span></h2>
                   <p className="text-xl text-gray-400 max-w-3xl mx-auto">We don't just alert you. We deploy specialized AI agents that debate the best course of action, calculate the ROI, and queue the fix for your final approval.</p>
                 </motion.div>
 
-                <div className="space-y-32">
+                <div className="space-y-24 md:space-y-32 w-full">
                   {/* Feature 1 - LangGraph */}
-                  <div className="flex flex-col md:flex-row items-center gap-12 md:gap-24">
+                  <div className="flex flex-col md:flex-row items-center gap-10 md:gap-16 w-full">
                     <motion.div 
-                      initial={{ opacity: 0, x: -50 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, margin: "-100px" }} transition={{ duration: 0.8 }}
-                      className="md:w-1/2"
+                      initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, margin: "-50px" }} transition={{ duration: 0.8 }}
+                      className="w-full md:w-1/2 flex flex-col items-center md:items-start text-center md:text-left"
                     >
                       <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-blue-500/20 text-blue-400 mb-6">
                         <CpuChipIcon className="h-8 w-8" />
@@ -231,12 +231,12 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
                       </p>
                     </motion.div>
                     <motion.div 
-                      initial={{ opacity: 0, x: 50 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, margin: "-100px" }} transition={{ duration: 0.8 }}
-                      className="md:w-1/2 relative"
+                      initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, margin: "-50px" }} transition={{ duration: 0.8 }}
+                      className="w-full md:w-1/2 relative flex justify-center mt-8 md:mt-0"
                     >
-                       <div className="absolute inset-0 bg-blue-500/20 blur-3xl rounded-full"></div>
-                       <div className="relative rounded-2xl border border-white/10 bg-black/50 p-6 backdrop-blur-xl shadow-2xl">
-                          <pre className="text-sm text-blue-300 font-mono">
+                       <div className="absolute inset-0 bg-blue-500/20 blur-2xl md:blur-3xl rounded-full max-w-[400px] w-full mx-auto"></div>
+                       <div className="relative w-full max-w-[450px] rounded-2xl border border-white/10 bg-black/50 p-4 md:p-6 backdrop-blur-xl shadow-2xl overflow-x-auto whitespace-pre-wrap">
+                          <pre className="text-xs md:text-sm text-blue-300 font-mono text-left break-words">
 {`SOMA: "Fridge 3 compressor degrading. Spoils in 4hr."
 PULSE: "Storm warning. Tech dispatch delayed."
 VIGIL: "Transfer to Fridge 1 approved (CDSCO safe)."
@@ -248,10 +248,10 @@ AUDIT: "ROI protected. $4k inventory saved."
                   </div>
 
                   {/* Feature 2 - MCP Native */}
-                  <div className="flex flex-col md:flex-row-reverse items-center gap-12 md:gap-24">
+                  <div className="flex flex-col md:flex-row-reverse items-center gap-10 md:gap-16 w-full">
                     <motion.div 
-                      initial={{ opacity: 0, x: 50 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, margin: "-100px" }} transition={{ duration: 0.8 }}
-                      className="md:w-1/2"
+                      initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, margin: "-50px" }} transition={{ duration: 0.8 }}
+                      className="w-full md:w-1/2 flex flex-col items-center md:items-start text-center md:text-left"
                     >
                       <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-emerald-500/20 text-emerald-400 mb-6">
                         <CircleStackIcon className="h-8 w-8" />
@@ -262,8 +262,8 @@ AUDIT: "ROI protected. $4k inventory saved."
                       </p>
                     </motion.div>
                     <motion.div 
-                      initial={{ opacity: 0, x: -50 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, margin: "-100px" }} transition={{ duration: 0.8 }}
-                      className="md:w-1/2 grid grid-cols-2 gap-4"
+                      initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, margin: "-50px" }} transition={{ duration: 0.8 }}
+                      className="w-full max-w-[500px] md:w-1/2 grid grid-cols-2 gap-3 md:gap-4 mt-8 md:mt-0"
                     >
                        <div className="h-32 rounded-2xl border border-emerald-500/20 bg-emerald-900/10 flex flex-col items-center justify-center text-emerald-400">
                          <span className="font-bold text-2xl">IoT</span>
@@ -285,10 +285,10 @@ AUDIT: "ROI protected. $4k inventory saved."
                   </div>
 
                   {/* Feature 3 - HITL */}
-                  <div className="flex flex-col md:flex-row items-center gap-12 md:gap-24">
+                  <div className="flex flex-col md:flex-row items-center gap-10 md:gap-16 w-full">
                     <motion.div 
-                      initial={{ opacity: 0, x: -50 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, margin: "-100px" }} transition={{ duration: 0.8 }}
-                      className="md:w-1/2"
+                      initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, margin: "-50px" }} transition={{ duration: 0.8 }}
+                      className="w-full md:w-1/2 flex flex-col items-center md:items-start text-center md:text-left"
                     >
                       <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-indigo-500/20 text-indigo-400 mb-6">
                         <ComputerDesktopIcon className="h-8 w-8" />
@@ -299,12 +299,12 @@ AUDIT: "ROI protected. $4k inventory saved."
                       </p>
                     </motion.div>
                     <motion.div 
-                      initial={{ opacity: 0, x: 50 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, margin: "-100px" }} transition={{ duration: 0.8 }}
-                      className="md:w-1/2 w-full flex justify-center"
+                      initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, margin: "-50px" }} transition={{ duration: 0.8 }}
+                      className="w-full md:w-1/2 flex justify-center mt-8 md:mt-0"
                     >
                       <button
                         onClick={() => setAuthState("login")}
-                        className="group flex items-center justify-center gap-3 rounded-2xl bg-blue-600 px-10 py-6 text-xl font-bold text-white shadow-[0_0_30px_rgba(37,99,235,0.4)] transition-all hover:bg-blue-500 hover:scale-105"
+                        className="group flex items-center justify-center gap-3 rounded-2xl bg-blue-600 px-8 py-5 md:px-10 md:py-6 text-lg md:text-xl font-bold text-white shadow-[0_0_30px_rgba(37,99,235,0.4)] transition-all hover:bg-blue-500 hover:scale-105 w-full max-w-[350px]"
                       >
                         Enter The Grid
                         <ArrowRightIcon className="h-6 w-6 transition-transform group-hover:translate-x-2" />
@@ -314,7 +314,8 @@ AUDIT: "ROI protected. $4k inventory saved."
                 </div>
              </div>
              
-             <footer className="w-full text-center mt-32 py-8 border-t border-white/5 text-gray-600">
+             
+             <footer className="w-full text-center mt-20 pt-8 pb-12 border-t border-white/5 text-gray-600">
                <p>© 2026 PharmaIQ. Autonomous Healthcare Retail Operations.</p>
              </footer>
           </section>
