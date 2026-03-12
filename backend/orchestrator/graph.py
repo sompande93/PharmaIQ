@@ -224,6 +224,13 @@ async def run_pipeline(update_callback=None, run_id=None) -> dict:
     final_state = initial_state
     try:
         async for event in pipeline.astream(initial_state):
+            # Check if the run was externally stopped
+            from api.routes.pipeline import load_runs
+            current_runs = load_runs()
+            if run_id in current_runs and current_runs[run_id].get("status") == "failed":
+                print(f"[{datetime.now().isoformat()}] Pipeline {run_id} was externally stopped. Aborting graph execution.")
+                break
+
             # The event is a dict where keys are node names and values are the state updates
             for node_name, state_update in event.items():
                 final_state.update(state_update)
