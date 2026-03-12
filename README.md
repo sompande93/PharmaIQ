@@ -34,6 +34,8 @@ It continuously monitors IoT feeds, epidemiological health data, weather pattern
 - **MCP-Native Integration**: Utilizes the Model Context Protocol to seamlessly interface with 8 distinct enterprise and environmental data servers.
 - **Human-in-the-Loop (HITL) Safety**: Critical actions (like emergency stock transfers or overriding rosters) are paused pending Manager Approval, bridging the gap between automation and clinical safety.
 - **Predictive Cold Chain Protection**: Anticipates spoilage *before* it happens by correlating ambient weather, IoT compressor data, and real-time maintenance logs.
+- **Prompt Decoupling Platform**: Completely separates application logic from LLM prompt engineering, allowing non-developers to tune AI personas without touching codebase.
+- **Native LangSmith Tracing**: Deep observability into multi-agent thought processes, enabling cost analysis, latency tracking, and step-by-step reasoning playback.
 
 ---
 
@@ -135,6 +137,7 @@ sequenceDiagram
 - **AI / LLM**: Google Gemini 2.0 Flash
 - **Orchestration**: LangGraph (for stateful multi-agent pipelines)
 - **Tooling**: Model Context Protocol (MCP) for deterministic tool calling
+- **Observability**: LangSmith (for tracing and tracking agent steps)
 
 **Frontend**
 - **Framework**: Next.js 14+ (React)
@@ -197,3 +200,5 @@ npm run dev
 - **Epidemic Preemption (Proactive Logistics)**: Cross-references public health cluster data with internal warehouse stock to preemptively re-route medications to high-demand zones.
 - **Premium Glassmorphism UI**: A visually stunning, highly responsive dashboard designed for clarity in high-pressure operational environments.
 - **Live Agent State Tracking**: Transparent UI showing the exact reasoning steps and critiques happening inside the LangGraph state machine.
+- **Prompt Decoupling**: Isolate prompt engineering into discrete template files, allowing rapid A/B testing of persona instructions without redeploying code.
+- **LangSmith Tracing Integration**: Full visibility into token usage, tool call latency, and inner monologue loops for every agent.
