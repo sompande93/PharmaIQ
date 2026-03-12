@@ -10,7 +10,8 @@ import {
     Activity,
     Package,
     Stethoscope,
-    TrendingDown
+    TrendingDown,
+    LogOut
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -67,7 +68,16 @@ export function Sidebar() {
                         <p className="text-xs font-medium text-white">Ops Manager</p>
                         <p className="text-[10px] text-muted-foreground">MedChain India</p>
                     </div>
-                    <Settings className="w-4 h-4 ml-auto text-muted-foreground cursor-pointer hover:text-white" />
+                    <button 
+                        onClick={() => {
+                            localStorage.removeItem("pharmaiq_auth");
+                            window.location.reload();
+                        }}
+                        className="ml-auto text-muted-foreground cursor-pointer hover:text-danger hover:bg-danger/10 p-1.5 rounded-md transition-all"
+                        title="Sign Out"
+                    >
+                        <LogOut className="w-4 h-4" />
+                    </button>
                 </div>
             </div>
         </div>

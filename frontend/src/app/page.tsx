@@ -98,7 +98,9 @@ export default function Dashboard() {
     }
   };
 
-  const handleStopAll = async () => {
+  const handleStopAll = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
     if (!confirm("Emergency Stop: Terminate all active analyses?")) return;
     try {
       await apiService.stopAllRuns();
@@ -207,11 +209,11 @@ export default function Dashboard() {
                 variant="outline"
                 size="sm"
                 onClick={(e) => {
-                  console.log("Stop Button Clicked");
                   e.preventDefault();
+                  e.stopPropagation();
                   handleStopRun(activeRun.run_id);
                 }}
-                className="border-danger/50 text-danger hover:bg-danger/10 h-7 text-[10px] uppercase tracking-widest relative z-50"
+                className="border-danger/50 text-danger hover:bg-danger/10 h-7 text-[10px] uppercase tracking-widest relative z-50 cursor-pointer pointer-events-auto"
               >
                 <Square className="w-3 h-3 mr-1 fill-current" />
                 Stop Analysis
@@ -249,7 +251,7 @@ export default function Dashboard() {
             Sync Data
           </Button>
           {runs.some(r => r.status === "running") && (
-            <Button variant="outline" size="md" onClick={handleStopAll} className="border-danger/50 text-danger hover:bg-danger/10">
+            <Button variant="outline" size="md" onClick={handleStopAll} className="border-danger/50 text-danger hover:bg-danger/10 cursor-pointer relative z-50">
               <Square className="w-4 h-4 mr-2 fill-current" />
               Stop All
             </Button>
