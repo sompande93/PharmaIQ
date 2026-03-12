@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { Sidebar } from "@/components/Sidebar";
+import { AuthGuard } from "@/components/AuthGuard";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,12 +19,14 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <body className={`${inter.className} overflow-hidden font-sans`}>
-        <div className="flex h-screen w-screen overflow-hidden">
-          <Sidebar />
-          <main className="flex-1 overflow-y-auto relative custom-scrollbar">
-            {children}
-          </main>
-        </div>
+        <AuthGuard>
+          <div className="flex h-screen w-screen overflow-hidden">
+            <Sidebar />
+            <main className="flex-1 overflow-y-auto relative custom-scrollbar">
+              {children}
+            </main>
+          </div>
+        </AuthGuard>
       </body>
     </html>
   );

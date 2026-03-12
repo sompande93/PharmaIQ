@@ -187,9 +187,13 @@ npm run dev
 
 ### 4. Running the Pipeline
 1. Open your browser to `http://localhost:3000` (or `3001`).
-2. Click the **"Trigger Analysis"** button on the Dashboard.
-3. Watch the terminal logs or UI as the LangGraph agents collect signals, reason through them, and debate compliance (takes ~30-60 seconds).
-4. Review the final proposed actions in the **Safety Review** tab and **Authorize** the high-risk operations to close the loop!
+2. Click **"Sign In"** or **"Enter Platform"** on the landing page.
+3. Login using the default demo credentials:
+   - **ID**: `PharmaEmployee`
+   - **Pin**: `12345`
+4. Click the **"Trigger Analysis"** button on the Dashboard.
+5. Watch the terminal logs or UI as the LangGraph agents collect signals, reason through them, and debate compliance (takes ~30-60 seconds).
+6. Review the final proposed actions in the **Safety Review** tab and **Authorize** the high-risk operations to close the loop!
 
 ---
 
