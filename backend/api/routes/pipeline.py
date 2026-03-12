@@ -16,6 +16,9 @@ import json
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 RUNS_FILE = os.path.join(BASE_DIR, "data", "runs.json")
 
+# In-memory flags for immediate abortion
+GLOBAL_STOP_FLAGS = set()
+
 def load_runs():
     if os.path.exists(RUNS_FILE):
         try:
@@ -244,6 +247,7 @@ async def delete_run(run_id: str):
 @router.post("/runs/{run_id}/stop")
 async def stop_run(run_id: str):
     """Mark an active run as failed/stopped."""
+    GLOBAL_STOP_FLAGS.add(run_id)
     runs = load_runs()
     if run_id in runs:
         if runs[run_id].get("status") == "running":
@@ -263,6 +267,7 @@ async def stop_all_runs():
     stopped = []
     for rid, data in runs.items():
         if data.get("status") == "running":
+            GLOBAL_STOP_FLAGS.add(rid)
             data["status"] = "failed"
             data["error"] = "Stopped by user (global stop)"
             data["completed_at"] = datetime.now().isoformat()

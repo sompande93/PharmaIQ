@@ -79,7 +79,6 @@ export default function Dashboard() {
   };
 
   const handleStopRun = async (runId: string) => {
-    if (!confirm(`Are you sure you want to stop analysis ${runId}?`)) return;
     try {
       await apiService.stopRun(runId);
       await fetchData();
@@ -89,7 +88,6 @@ export default function Dashboard() {
   };
 
   const handleDeleteRun = async (runId: string) => {
-    if (!confirm(`Permanently delete history for ${runId}?`)) return;
     try {
       await apiService.deleteRun(runId);
       await fetchData();
@@ -101,7 +99,6 @@ export default function Dashboard() {
   const handleStopAll = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    if (!confirm("Emergency Stop: Terminate all active analyses?")) return;
     try {
       await apiService.stopAllRuns();
       await fetchData();
@@ -209,11 +206,10 @@ export default function Dashboard() {
                 variant="outline"
                 size="sm"
                 onClick={(e) => {
-                  e.preventDefault();
                   e.stopPropagation();
                   handleStopRun(activeRun.run_id);
                 }}
-                className="border-danger/50 text-danger hover:bg-danger/10 h-7 text-[10px] uppercase tracking-widest relative z-50 cursor-pointer pointer-events-auto"
+                className="border-danger/50 text-danger hover:bg-danger/10 h-7 text-[10px] uppercase tracking-widest relative"
               >
                 <Square className="w-3 h-3 mr-1 fill-current" />
                 Stop Analysis
@@ -251,7 +247,7 @@ export default function Dashboard() {
             Sync Data
           </Button>
           {runs.some(r => r.status === "running") && (
-            <Button variant="outline" size="md" onClick={handleStopAll} className="border-danger/50 text-danger hover:bg-danger/10 cursor-pointer relative z-50">
+            <Button variant="outline" size="md" onClick={handleStopAll} className="border-danger/50 text-danger hover:bg-danger/10 relative">
               <Square className="w-4 h-4 mr-2 fill-current" />
               Stop All
             </Button>
@@ -372,11 +368,10 @@ export default function Dashboard() {
                               variant="ghost"
                               size="sm"
                               onClick={(e) => {
-                                e.preventDefault();
                                 e.stopPropagation();
                                 handleDeleteRun(run.run_id);
                               }}
-                              className="w-8 h-8 p-0 text-muted-foreground hover:text-danger hover:bg-danger/10 relative z-50"
+                              className="w-8 h-8 p-0 text-muted-foreground hover:text-danger hover:bg-danger/10 relative"
                             >
                               <Trash2 className="w-4 h-4" />
                             </Button>
