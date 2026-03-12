@@ -95,3 +95,27 @@ async def get_demand(store_id: str):
     """Get demand trends for a store."""
     trends = sales_analytics_mcp.get_demand_trend(store_id)
     return {"store_id": store_id, "trends": trends}
+@router.get("/weather-summary")
+async def get_weather_summary():
+    """Get aggregated weather risk across high-alert regions."""
+    # Get high-alert regions from health data
+    outbreaks = health_data_mcp.get_outbreak_zones()
+    regions = list(set([o["region"] for o in outbreaks]))
+    
+    if not regions:
+        # Fallback to some default regions if no outbreaks
+        regions = ["maharashtra", "kerala", "tamil_nadu"]
+        
+    summary = []
+    for region in regions:
+        forecast = weather_mcp.get_forecast_14d(region)
+        if "error" not in forecast:
+            summary.append({
+                "region": region,
+                "humidity": forecast["avg_humidity"],
+                "rainfall": forecast["total_rainfall_mm"],
+                "mosquito_risk": forecast["mosquito_risk"],
+                "waterlogging_risk": forecast["waterlogging_risk"]
+            })
+            
+    return summary

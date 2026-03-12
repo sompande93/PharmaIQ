@@ -17,7 +17,7 @@ class Settings(BaseSettings):
 
     # --- LLM ---
     GOOGLE_API_KEY: Optional[str] = None
-    LLM_MODEL: str = "gemini-3-flash-preview"
+    LLM_MODEL: str = "gemini-2.0-flash"
     LLM_TEMPERATURE: float = 0.1
 
     # --- Cold Chain Thresholds ---

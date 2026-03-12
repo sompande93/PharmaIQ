@@ -6,6 +6,12 @@ export interface Signal {
     expiring_stock: any[];
 }
 
+export interface ToolCall {
+    tool: string;
+    args: any;
+    result: string;
+}
+
 export interface ProposedAction {
     action_id: string;
     action_type: string;
@@ -43,12 +49,16 @@ export interface PipelineRun {
     actions_executed: number;
     soma_analysis_preview?: string;
     pulse_analysis_preview?: string;
+    soma_tool_calls?: ToolCall[];
+    pulse_tool_calls?: ToolCall[];
 }
 
 export interface FullRunDetails extends PipelineRun {
     signals: Signal;
     soma_analysis: string;
     pulse_analysis: string;
+    soma_tool_calls: ToolCall[];
+    pulse_tool_calls: ToolCall[];
     vigil_critique: string;
     audit_critique: string;
     critique_passed: boolean;

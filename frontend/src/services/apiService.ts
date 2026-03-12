@@ -1,7 +1,7 @@
 import axios from "axios";
 import { PipelineRun, FullRunDetails, ProposedAction } from "../types";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8001/api";
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api";
 
 const api = axios.create({
     baseURL: API_BASE_URL,
@@ -61,6 +61,31 @@ export const apiService = {
 
     getStaff: async (storeId: string) => {
         const response = await api.get(`/stores/staff/${storeId}`);
+        return response.data;
+    },
+
+    getAnalytics: async () => {
+        const response = await api.get("/pipeline/analytics");
+        return response.data;
+    },
+
+    getWeatherSummary: async () => {
+        const response = await api.get("/stores/weather-summary");
+        return response.data;
+    },
+
+    stopRun: async (runId: string) => {
+        const response = await api.post(`/pipeline/runs/${runId}/stop`);
+        return response.data;
+    },
+
+    deleteRun: async (runId: string) => {
+        const response = await api.delete(`/pipeline/runs/${runId}`);
+        return response.data;
+    },
+
+    stopAllRuns: async () => {
+        const response = await api.post("/pipeline/stop-all");
         return response.data;
     },
 };

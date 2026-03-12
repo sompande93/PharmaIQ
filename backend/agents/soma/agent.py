@@ -61,6 +61,8 @@ async def soma_node(state: dict) -> dict:
         HumanMessage(content=input_msg),
     ]
 
+    tool_calls_log = []
+
     # Run the agent with tool calling
     response = await agent.ainvoke(messages)
 
@@ -75,8 +77,13 @@ async def soma_node(state: dict) -> dict:
             tool_fn = tool_map.get(tool_call["name"])
             if tool_fn:
                 result = tool_fn.invoke(tool_call["args"])
+                tool_calls_log.append({
+                    "tool": tool_call["name"],
+                    "args": tool_call["args"],
+                    "result": str(result)
+                })
                 messages.append(
-                    ToolMessage(content=str(result), tool_call_id=tool_call["id"])
+                    ToolMessage(content=str(result), tool_call_id=tool_call["id"], name=tool_call["name"])
                 )
 
         # Get the agent's final analysis after seeing tool results
@@ -90,8 +97,13 @@ async def soma_node(state: dict) -> dict:
                 tool_fn = tool_map.get(tool_call["name"])
                 if tool_fn:
                     result = tool_fn.invoke(tool_call["args"])
+                    tool_calls_log.append({
+                        "tool": tool_call["name"],
+                        "args": tool_call["args"],
+                        "result": str(result)
+                    })
                     messages.append(
-                        ToolMessage(content=str(result), tool_call_id=tool_call["id"])
+                        ToolMessage(content=str(result), tool_call_id=tool_call["id"], name=tool_call["name"])
                     )
             response = await agent.ainvoke(messages)
 
@@ -110,6 +122,7 @@ async def soma_node(state: dict) -> dict:
 
     return {
         "soma_analysis": analysis,
+        "soma_tool_calls": tool_calls_log,
         "proposed_actions": state.get("proposed_actions", []) + proposed,
         "current_node": "soma_complete",
     }
@@ -202,11 +215,17 @@ def _extract_proposed_actions(analysis: str, agent_name: str) -> list[dict]:
             if ("value" in line_lower or "cost" in line_lower or "₹" in line):
                 nums = re.findall(r'[\d,]+\.?\d*', line)
                 if nums:
-                    val = float(nums[0].replace(",", ""))
-                    if "cost" in line_lower:
-                        current_action["estimated_cost"] = val
-                    else:
-                        current_action["estimated_value"] = val
+                    try:
+                        val_str = nums[0].replace(",", "")
+                        # Ensure there's at least one digit
+                        if any(c.isdigit() for c in val_str):
+                            val = float(val_str)
+                            if "cost" in line_lower:
+                                current_action["estimated_cost"] = val
+                            else:
+                                current_action["estimated_value"] = val
+                    except (ValueError, IndexError):
+                        pass
 
     if current_action:
         actions.append(current_action)

@@ -39,6 +39,10 @@ class PharmaIQState(BaseModel):
     soma_analysis: Optional[str] = None
     pulse_analysis: Optional[str] = None
 
+    # --- Tool Call Logs ---
+    soma_tool_calls: list[dict] = Field(default_factory=list)
+    pulse_tool_calls: list[dict] = Field(default_factory=list)
+
     # --- Proposed actions (from SOMA and PULSE) ---
     proposed_actions: list[dict] = Field(default_factory=list)
 

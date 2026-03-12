@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import {
   Play,
   RefreshCcw,
@@ -9,8 +10,9 @@ import {
   Clock,
   Activity,
   TrendingUp,
-  MapPin,
-  ChevronRight
+  ChevronRight,
+  Trash2,
+  Square
 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/Card";
@@ -22,12 +24,16 @@ import { motion } from "framer-motion";
 
 export default function Dashboard() {
   const [runs, setRuns] = useState<PipelineRun[]>([]);
+  const [networkStats, setNetworkStats] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [triggering, setTriggering] = useState(false);
   const [activeRunId, setActiveRunId] = useState<string | null>(null);
+  const [isMounted, setIsMounted] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
-    fetchRuns();
+    setIsMounted(true);
+    fetchData();
   }, []);
 
   // Polling for active runs
@@ -36,7 +42,7 @@ export default function Dashboard() {
 
     const hasActiveRun = runs.some(r => r.status === "running");
     if (hasActiveRun) {
-      interval = setInterval(fetchRuns, 3000); // Poll every 3 seconds
+      interval = setInterval(fetchData, 3000); // Poll every 3 seconds
     }
 
     return () => {
@@ -44,13 +50,17 @@ export default function Dashboard() {
     };
   }, [runs]);
 
-  const fetchRuns = async () => {
+  const fetchData = async () => {
     try {
-      const data = await apiService.listRuns();
-      setRuns(data.runs);
+      const [runsData, statsData] = await Promise.all([
+        apiService.listRuns(),
+        apiService.getAnalytics()
+      ]);
+      setRuns(runsData.runs);
+      setNetworkStats(statsData);
       setLoading(false);
     } catch (error) {
-      console.error("Failed to fetch runs", error);
+      console.error("Failed to fetch dashboard data", error);
       setLoading(false);
     }
   };
@@ -60,11 +70,41 @@ export default function Dashboard() {
       setTriggering(true);
       const result = await apiService.runPipeline();
       setActiveRunId(result.run_id);
-      await fetchRuns();
+      await fetchData();
     } catch (error) {
       console.error("Failed to trigger pipeline", error);
     } finally {
       setTriggering(false);
+    }
+  };
+
+  const handleStopRun = async (runId: string) => {
+    if (!confirm(`Are you sure you want to stop analysis ${runId}?`)) return;
+    try {
+      await apiService.stopRun(runId);
+      await fetchData();
+    } catch (error) {
+      console.error("Failed to stop run", error);
+    }
+  };
+
+  const handleDeleteRun = async (runId: string) => {
+    if (!confirm(`Permanently delete history for ${runId}?`)) return;
+    try {
+      await apiService.deleteRun(runId);
+      await fetchData();
+    } catch (error) {
+      console.error("Failed to delete run", error);
+    }
+  };
+
+  const handleStopAll = async () => {
+    if (!confirm("Emergency Stop: Terminate all active analyses?")) return;
+    try {
+      await apiService.stopAllRuns();
+      await fetchData();
+    } catch (error) {
+      console.error("Failed to stop all runs", error);
     }
   };
 
@@ -111,17 +151,19 @@ export default function Dashboard() {
     },
     {
       name: "Value Protected",
-      value: "₹24.8L",
+      value: networkStats ? formatCurrency(networkStats.net_value_protected) : "₹0",
       icon: TrendingUp,
       color: "text-primary",
       bg: "bg-primary/10"
     },
   ];
 
+  if (!isMounted) return null;
+
   return (
     <div className="p-8 space-y-8 max-w-7xl mx-auto">
       {/* HITL Attention Banner */}
-      {runs.some(r => r.actions_awaiting_approval > 0) && (
+      {runs.some(r => (r.actions_awaiting_approval || 0) > 0) && (
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -160,7 +202,22 @@ export default function Dashboard() {
                 <p className="text-xs text-muted-foreground">Currently processing: <span className="text-primary font-mono uppercase">{activeRun.current_node?.replace(/_/g, " ")} Agent</span></p>
               </div>
             </div>
-            <span className="text-lg font-bold text-primary font-mono">{getNodeProgress(activeRun.current_node)}%</span>
+            <div className="flex items-center gap-4">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={(e) => {
+                  console.log("Stop Button Clicked");
+                  e.preventDefault();
+                  handleStopRun(activeRun.run_id);
+                }}
+                className="border-danger/50 text-danger hover:bg-danger/10 h-7 text-[10px] uppercase tracking-widest relative z-50"
+              >
+                <Square className="w-3 h-3 mr-1 fill-current" />
+                Stop Analysis
+              </Button>
+              <span className="text-lg font-bold text-primary font-mono">{getNodeProgress(activeRun.current_node)}%</span>
+            </div>
           </div>
           <div className="w-full h-3 bg-white/5 rounded-full overflow-hidden border border-white/10 p-0.5">
             <motion.div
@@ -187,10 +244,16 @@ export default function Dashboard() {
           <p className="text-muted-foreground">Multi-agent supply chain orchestration dashboard.</p>
         </div>
         <div className="flex gap-4">
-          <Button variant="outline" size="md" onClick={fetchRuns} disabled={loading || !!activeRun}>
-            <RefreshCcw className={cn("w-4 h-4 mr-2", loading && !activeRun && "animate-spin")} />
+          <Button variant="outline" size="md" onClick={fetchData} disabled={loading}>
+            <RefreshCcw className={cn("w-4 h-4 mr-2", loading && "animate-spin")} />
             Sync Data
           </Button>
+          {runs.some(r => r.status === "running") && (
+            <Button variant="outline" size="md" onClick={handleStopAll} className="border-danger/50 text-danger hover:bg-danger/10">
+              <Square className="w-4 h-4 mr-2 fill-current" />
+              Stop All
+            </Button>
+          )}
           <Button variant="primary" size="md" onClick={handleTrigger} disabled={triggering || !!activeRun}>
             <Play className={cn("w-4 h-4 mr-2", (triggering || !!activeRun) && "animate-pulse")} />
             {activeRun ? "Analysis Running..." : "Trigger Analysis"}
@@ -230,7 +293,7 @@ export default function Dashboard() {
         {/* Recent Runs */}
         <Card className="lg:col-span-2">
           <CardHeader>
-            <CardTitle>Recent Orchestration Cycles</CardTitle>
+            <CardTitle>Orchestration History</CardTitle>
             <CardDescription>Live status of agent reasoning and decision flows.</CardDescription>
           </CardHeader>
           <CardContent>
@@ -251,7 +314,7 @@ export default function Dashboard() {
                       <th className="pb-3 font-medium">RUN ID</th>
                       <th className="pb-3 font-medium">STATUS</th>
                       <th className="pb-3 font-medium text-center">SIGNALS</th>
-                      <th className="pb-3 font-medium text-center">ACTIONS</th>
+                      <th className="pb-3 font-medium text-center text-primary">ROI</th>
                       <th className="pb-3 font-medium text-right">TIMESTAMP</th>
                     </tr>
                   </thead>
@@ -260,10 +323,9 @@ export default function Dashboard() {
                       <tr
                         key={run.run_id}
                         className={cn(
-                          "group hover:bg-white/[0.02] cursor-pointer transition-colors",
+                          "group hover:bg-white/[0.02] transition-colors",
                           run.status === "running" && "bg-primary/5 border-l-2 border-l-primary"
                         )}
-                        onClick={() => window.location.href = `/agents?runId=${run.run_id}`}
                       >
                         <td className="py-4 px-2">
                           <div className="flex flex-col">
@@ -285,17 +347,38 @@ export default function Dashboard() {
                         </td>
                         <td className="py-4 text-center">
                           <div className="flex items-center justify-center gap-1.5">
-                            <Badge variant="outline" className="text-[10px]">{run.signals_detected?.fridge_breaches || 0}B</Badge>
-                            <Badge variant="outline" className="text-[10px]">{run.signals_detected?.disease_clusters || 0}O</Badge>
+                            <Badge variant="outline" className="text-[10px]">{Object.values(run.signals_detected || {}).reduce((a, b) => (a as any) + (b as any), 0)} S</Badge>
                           </div>
                         </td>
-                        <td className="py-4 text-center">
-                          <span className="text-sm font-semibold text-white">{run.actions_proposed || 0}</span>
+                        <td className="py-4 text-center text-sm font-semibold text-white">
+                          {run.actions_proposed || 0}
                         </td>
                         <td className="py-4 text-right pr-2">
-                          <span className="text-xs text-muted-foreground italic">
-                            {formatDate(run.started_at)}
-                          </span>
+                          <div className="flex items-center justify-end gap-2">
+                            <span className="text-[10px] text-muted-foreground italic mr-2">
+                              {formatDate(run.started_at)}
+                            </span>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => router.push(`/agents?runId=${run.run_id}`)}
+                              className="h-7 text-[10px] uppercase tracking-wider"
+                            >
+                              View
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                handleDeleteRun(run.run_id);
+                              }}
+                              className="w-8 h-8 p-0 text-muted-foreground hover:text-danger hover:bg-danger/10 relative z-50"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </Button>
+                          </div>
                         </td>
                       </tr>
                     ))}

@@ -6,7 +6,7 @@ Main graph definition wiring all agents together:
 
 from langgraph.graph import StateGraph, START, END
 from typing import TypedDict, Optional
-from datetime import datetime
+from datetime import datetime, timedelta
 import uuid
 
 from .nodes import collect_signals
@@ -29,6 +29,10 @@ class PharmaIQGraphState(TypedDict):
     # Agent outputs
     soma_analysis: Optional[str]
     pulse_analysis: Optional[str]
+
+    # Tool Call Logs
+    soma_tool_calls: list[dict]
+    pulse_tool_calls: list[dict]
 
     # Proposed actions
     proposed_actions: list[dict]
@@ -179,9 +183,10 @@ def create_pipeline():
     return graph.compile()
 
 
-async def run_pipeline(update_callback=None) -> dict:
+async def run_pipeline(update_callback=None, run_id=None) -> dict:
     """
     Run the full PharmaIQ pipeline end-to-end with intermediate state updates.
+    If run_id is provided, it uses that instead of generating a new one.
     """
     pipeline = create_pipeline()
 
@@ -193,6 +198,8 @@ async def run_pipeline(update_callback=None) -> dict:
         "expiring_stock": [],
         "soma_analysis": None,
         "pulse_analysis": None,
+        "soma_tool_calls": [],
+        "pulse_tool_calls": [],
         "proposed_actions": [],
         "vigil_critique": None,
         "audit_critique": None,
@@ -202,9 +209,10 @@ async def run_pipeline(update_callback=None) -> dict:
         "rejected_actions": [],
         "executed_actions": [],
         "alerts": [],
-        "run_id": f"RUN_{uuid.uuid4().hex[:8]}",
+        "run_id": run_id or f"RUN_{uuid.uuid4().hex[:8]}",
         "started_at": datetime.now().isoformat(),
         "completed_at": None,
+        "status": "running",
         "current_node": START,
     }
 
@@ -228,10 +236,12 @@ async def run_pipeline(update_callback=None) -> dict:
         if update_callback:
             await update_callback(final_state)
             
+            
     except Exception as e:
-        print(f"Error in pipeline {final_state.get('run_id')}: {str(e)}")
+        print(f"[{datetime.now().isoformat()}] Error in pipeline {final_state.get('run_id')}: {str(e)}")
         final_state["error"] = str(e)
         final_state["status"] = "failed"
+        final_state["completed_at"] = datetime.now().isoformat()
         if update_callback:
             await update_callback(final_state)
 

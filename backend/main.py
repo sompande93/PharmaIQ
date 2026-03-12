@@ -30,6 +30,24 @@ app.include_router(approvals_router)
 app.include_router(stores_router)
 
 
+@app.on_event("startup")
+async def cleanup_stale_runs():
+    """Mark any runs left in 'running' state from a previous server session as 'failed'."""
+    from api.routes.pipeline import load_runs, save_run
+    from datetime import datetime
+    runs = load_runs()
+    for run_id, data in runs.items():
+        if data.get("status") == "running":
+            data["status"] = "failed"
+            data["completed_at"] = datetime.now().isoformat()
+            data["error"] = "Server restarted before pipeline completed"
+            data["current_node"] = data.get("current_node", "unknown")
+            save_run(run_id, data)
+    stale = [rid for rid, d in runs.items() if d.get("error") == "Server restarted before pipeline completed"]
+    if stale:
+        print(f"[STARTUP] Cleaned {len(stale)} stale runs: {stale}")
+
+
 @app.get("/")
 async def root():
     return {
