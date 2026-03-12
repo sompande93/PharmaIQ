@@ -7,7 +7,13 @@ import {
   ShieldCheckIcon, 
   BoltIcon, 
   ArrowRightIcon, 
-  XMarkIcon 
+  XMarkIcon,
+  ExclamationTriangleIcon,
+  ChartBarIcon,
+  CpuChipIcon,
+  CircleStackIcon,
+  ComputerDesktopIcon,
+  ChevronDownIcon
 } from "@heroicons/react/24/outline";
 
 type AuthState = "landing" | "login" | "authenticated";
@@ -41,11 +47,6 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem("pharmaiq_auth");
-    setAuthState("landing");
-  };
-
   if (isLoading) {
     return (
       <div className="flex h-screen w-screen items-center justify-center bg-gray-900">
@@ -53,6 +54,22 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
       </div>
     );
   }
+
+  // Common animation variants
+  const fadeInUP = {
+    hidden: { opacity: 0, y: 50 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" } }
+  };
+
+  const staggerContainer = {
+    hidden: { opacity: 0 },
+    visible: { 
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.2
+      }
+    }
+  };
 
   return (
     <AnimatePresence mode="wait">
@@ -62,94 +79,245 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
            initial={{ opacity: 0 }}
            animate={{ opacity: 1 }}
            exit={{ opacity: 0 }}
-           className="relative flex h-screen w-screen flex-col bg-gray-950 overflow-y-auto"
+           className="relative flex h-screen w-screen flex-col bg-gray-950 overflow-y-auto scroll-smooth custom-scrollbar"
         >
-          {/* Header */}
-          <header className="absolute top-0 w-full z-50 flex items-center justify-between px-8 py-6">
+          {/* Fixed Header */}
+          <header className="fixed top-0 w-full z-50 flex items-center justify-between px-8 py-4 bg-gray-950/50 backdrop-blur-lg border-b border-white/5">
             <div className="flex items-center gap-2 text-white">
               <BuildingOfficeIcon className="h-8 w-8 text-blue-500" />
               <span className="text-2xl font-bold tracking-tight">Pharma<span className="text-blue-500">IQ</span></span>
             </div>
             <button
               onClick={() => setAuthState("login")}
-              className="rounded-full bg-white/10 px-6 py-2.5 text-sm font-medium text-white backdrop-blur-md transition-all hover:bg-white/20 hover:scale-105"
+              className="rounded-full bg-blue-600/90 hover:bg-blue-500 px-6 py-2 text-sm font-semibold text-white shadow-[0_0_15px_rgba(59,130,246,0.5)] transition-all hover:scale-105"
             >
               Sign In
             </button>
           </header>
 
-          {/* Hero Content */}
-          <main className="relative flex flex-1 flex-col items-center justify-center px-6 text-center z-10">
+          {/* Section 1: Hero */}
+          <section className="relative flex min-h-screen flex-col items-center justify-center px-6 text-center pt-20">
             {/* Ambient Background Glow */}
             <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
-              <div className="absolute -top-[40%] left-[20%] h-[800px] w-[800px] rounded-full bg-blue-900/20 blur-[120px]" />
-              <div className="absolute top-[20%] -right-[10%] h-[600px] w-[600px] rounded-full bg-indigo-900/20 blur-[120px]" />
+              <div className="absolute top-[20%] left-[50%] -translate-x-1/2 h-[800px] w-[800px] rounded-full bg-blue-900/10 blur-[120px]" />
             </div>
 
             <motion.div
-              initial={{ y: 30, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.2, duration: 0.8 }}
-              className="z-10 max-w-4xl"
+              variants={staggerContainer}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              className="z-10 max-w-5xl"
             >
-              <div className="inline-flex items-center gap-2 rounded-full border border-blue-500/30 bg-blue-500/10 px-4 py-1.5 mb-8">
+              <motion.div variants={fadeInUP} className="inline-flex items-center gap-2 rounded-full border border-blue-500/30 bg-blue-500/10 px-4 py-1.5 mb-8">
                 <span className="flex h-2 w-2 rounded-full bg-blue-500 animate-pulse"></span>
-                <span className="text-sm font-medium text-blue-200">v1.2 Agentic OS Now Live</span>
-              </div>
+                <span className="text-sm font-medium text-blue-200 tracking-wide">PHARMAIQ V1.2.0 DEPLOYED</span>
+              </motion.div>
               
-              <h1 className="mb-6 text-5xl font-extrabold tracking-tight text-white md:text-7xl">
+              <motion.h1 variants={fadeInUP} className="mb-6 text-5xl font-extrabold tracking-tight text-white md:text-7xl lg:text-8xl">
                 The Autonomous <br />
-                <span className="bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent">
+                <span className="bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-400 bg-clip-text text-transparent">
                   Healthcare Retail
                 </span> OS
-              </h1>
+              </motion.h1>
               
-              <p className="mx-auto mb-10 max-w-2xl text-lg text-gray-400 md:text-xl leading-relaxed">
-                Connect external IoT sensors, ERP systems, and weather APIs to multi-agent LLM orchestrators. Shift your pharmacy from reactive alerts to proactive autonomy.
-              </p>
+              <motion.p variants={fadeInUP} className="mx-auto mb-10 max-w-3xl text-lg text-gray-400 md:text-2xl leading-relaxed font-light">
+                Connect IoT sensors, ERP systems, and epidemiological data to Multi-Agent LLMs. Stop spoilage, preempt outbreaks, and automate compliance natively.
+              </motion.p>
               
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+              <motion.div variants={fadeInUP} className="flex flex-col sm:flex-row items-center justify-center gap-4">
                 <button
                   onClick={() => setAuthState("login")}
-                  className="group flex items-center justify-center gap-2 rounded-full bg-blue-600 px-8 py-4 text-lg font-semibold text-white transition-all hover:bg-blue-500 hover:scale-105 disabled:opacity-50"
+                  className="group flex items-center justify-center gap-2 rounded-full bg-white text-gray-900 px-8 py-4 text-lg font-bold transition-all hover:bg-gray-200 hover:scale-105"
                 >
                   Enter Platform
                   <ArrowRightIcon className="h-5 w-5 transition-transform group-hover:translate-x-1" />
                 </button>
                 <a
-                  href="https://github.com/sompande93/PharmaIQ"
-                  target="_blank"
-                  className="flex items-center justify-center rounded-full border border-gray-700 bg-gray-800/50 px-8 py-4 text-lg font-semibold text-white backdrop-blur-sm transition-all hover:bg-gray-800"
+                  href="#problem"
+                  className="flex items-center justify-center gap-2 rounded-full border border-white/20 bg-white/5 px-8 py-4 text-lg font-medium text-white backdrop-blur-sm transition-all hover:bg-white/10"
                 >
-                  View Documentation
+                  Discover How It Works
+                  <ChevronDownIcon className="h-5 w-5 animate-bounce" />
                 </a>
-              </div>
+              </motion.div>
             </motion.div>
+          </section>
 
-            {/* Feature Grid */}
-            <motion.div 
-               initial={{ y: 40, opacity: 0 }}
-               animate={{ y: 0, opacity: 1 }}
-               transition={{ delay: 0.6, duration: 0.8 }}
-               className="z-10 mt-24 grid w-full max-w-5xl grid-cols-1 gap-6 sm:grid-cols-3"
-            >
-              <div className="rounded-2xl border border-white/5 bg-white/5 p-6 backdrop-blur-sm text-left">
-                <ShieldCheckIcon className="h-10 w-10 text-emerald-400 mb-4" />
-                <h3 className="text-xl font-bold text-white mb-2">Compliance Driven</h3>
-                <p className="text-gray-400">VIGIL Agent strictly critiques all operational moves against CDSCO compliance standards.</p>
+          {/* Section 2: The Problem */}
+          <section id="problem" className="relative flex min-h-screen items-center justify-center py-24 px-6 bg-gradient-to-b from-gray-950 to-gray-900 border-t border-white/5">
+            <div className="z-10 w-full max-w-7xl">
+              <motion.div 
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, margin: "-100px" }}
+                variants={fadeInUP}
+                className="text-center mb-20"
+              >
+                <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">The Healthcare Retail Crisis</h2>
+                <p className="text-xl text-gray-400 max-w-2xl mx-auto">Traditional pharmacies rely on siloed, reactive systems. We're bleeding money and risking patient safety because we analyze data <span className="text-red-400 italic">after</span> the event.</p>
+              </motion.div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                {/* Problem 1 */}
+                <motion.div 
+                  initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }} variants={fadeInUP}
+                  className="group relative rounded-3xl border border-red-500/20 bg-gradient-to-br from-red-500/5 to-transparent p-8 backdrop-blur-md overflow-hidden"
+                >
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-red-500/10 rounded-full blur-3xl group-hover:bg-red-500/20 transition-all"></div>
+                  <ExclamationTriangleIcon className="h-14 w-14 text-red-400 mb-6" />
+                  <h3 className="text-2xl font-bold text-white mb-4">Reactive Cold Chain</h3>
+                  <p className="text-gray-400 leading-relaxed">
+                    Pinging a manager when a fridge crosses 8°C is too late. The insulin is already compromised. We need to predict compressor failures hours before they happen based on IoT telemetry and local weather.
+                  </p>
+                </motion.div>
+
+                {/* Problem 2 */}
+                <motion.div 
+                  initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }} variants={fadeInUP} transition={{ delay: 0.2 }}
+                  className="group relative rounded-3xl border border-amber-500/20 bg-gradient-to-br from-amber-500/5 to-transparent p-8 backdrop-blur-md overflow-hidden"
+                >
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/10 rounded-full blur-3xl group-hover:bg-amber-500/20 transition-all"></div>
+                  <ChartBarIcon className="h-14 w-14 text-amber-400 mb-6" />
+                  <h3 className="text-2xl font-bold text-white mb-4">Epidemic Blindspots</h3>
+                  <p className="text-gray-400 leading-relaxed">
+                    By the time ERP systems show a spike in Dengue medication sales, the local warehouse is empty. We need to route inventory based on real-time disease cluster surveillance from health departments.
+                  </p>
+                </motion.div>
+
+                {/* Problem 3 */}
+                <motion.div 
+                  initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }} variants={fadeInUP} transition={{ delay: 0.4 }}
+                  className="group relative rounded-3xl border border-purple-500/20 bg-gradient-to-br from-purple-500/5 to-transparent p-8 backdrop-blur-md overflow-hidden"
+                >
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-purple-500/10 rounded-full blur-3xl group-hover:bg-purple-500/20 transition-all"></div>
+                  <ShieldCheckIcon className="h-14 w-14 text-purple-400 mb-6" />
+                  <h3 className="text-2xl font-bold text-white mb-4">Unsafe Automation</h3>
+                  <p className="text-gray-400 leading-relaxed">
+                    You can't just let an AI order schedule 80 units of Morphine autonomously. Healthcare requires strict CDSCO compliance gating. Automation without specialized legal oversight is a liability.
+                  </p>
+                </motion.div>
               </div>
-              <div className="rounded-2xl border border-white/5 bg-white/5 p-6 backdrop-blur-sm text-left">
-                <BoltIcon className="h-10 w-10 text-amber-400 mb-4" />
-                <h3 className="text-xl font-bold text-white mb-2">Proactive Logistics</h3>
-                <p className="text-gray-400">PULSE Agent cross-references local epidemiology reports to route medications before outbreaks hit.</p>
-              </div>
-              <div className="rounded-2xl border border-white/5 bg-white/5 p-6 backdrop-blur-sm text-left">
-                <BuildingOfficeIcon className="h-10 w-10 text-blue-400 mb-4" />
-                <h3 className="text-xl font-bold text-white mb-2">Cold Chain Armor</h3>
-                <p className="text-gray-400">SOMA Agent prevents $100k spoilage events by predicting compressor failures.</p>
-              </div>
-            </motion.div>
-          </main>
+            </div>
+          </section>
+
+          {/* Section 3: The Solution / Features */}
+          <section className="relative flex min-h-screen flex-col items-center py-24 px-6 overflow-hidden bg-gray-900 border-t border-white/5">
+             {/* Tech grid background */}
+             <div className="absolute inset-0 z-0 opacity-[0.03]" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)', backgroundSize: '40px 40px' }}></div>
+             
+             <div className="z-10 w-full max-w-7xl">
+                <motion.div 
+                  initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={fadeInUP}
+                  className="text-center mb-20"
+                >
+                  <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">Enter <span className="text-blue-500">PharmaIQ</span></h2>
+                  <p className="text-xl text-gray-400 max-w-3xl mx-auto">We don't just alert you. We deploy specialized AI agents that debate the best course of action, calculate the ROI, and queue the fix for your final approval.</p>
+                </motion.div>
+
+                <div className="space-y-32">
+                  {/* Feature 1 - LangGraph */}
+                  <div className="flex flex-col md:flex-row items-center gap-12 md:gap-24">
+                    <motion.div 
+                      initial={{ opacity: 0, x: -50 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, margin: "-100px" }} transition={{ duration: 0.8 }}
+                      className="md:w-1/2"
+                    >
+                      <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-blue-500/20 text-blue-400 mb-6">
+                        <CpuChipIcon className="h-8 w-8" />
+                      </div>
+                      <h3 className="text-3xl font-bold text-white mb-4">Multi-Agent Orchestration</h3>
+                      <p className="text-lg text-gray-400 leading-relaxed">
+                        Powered by LangGraph and Gemini 2.0. The <strong>SOMA</strong> agent handles internal store operations. The <strong>PULSE</strong> agent tracks external logistics and outbreaks. They feed their findings to the <strong>VIGIL</strong> compliance agent and <strong>AUDIT</strong> financial agent to formulate a legally sound, profitable plan.
+                      </p>
+                    </motion.div>
+                    <motion.div 
+                      initial={{ opacity: 0, x: 50 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, margin: "-100px" }} transition={{ duration: 0.8 }}
+                      className="md:w-1/2 relative"
+                    >
+                       <div className="absolute inset-0 bg-blue-500/20 blur-3xl rounded-full"></div>
+                       <div className="relative rounded-2xl border border-white/10 bg-black/50 p-6 backdrop-blur-xl shadow-2xl">
+                          <pre className="text-sm text-blue-300 font-mono">
+{`SOMA: "Fridge 3 compressor degrading. Spoils in 4hr."
+PULSE: "Storm warning. Tech dispatch delayed."
+VIGIL: "Transfer to Fridge 1 approved (CDSCO safe)."
+AUDIT: "ROI protected. $4k inventory saved."
+-> Proposing Action to Human Manager...`}
+                          </pre>
+                       </div>
+                    </motion.div>
+                  </div>
+
+                  {/* Feature 2 - MCP Native */}
+                  <div className="flex flex-col md:flex-row-reverse items-center gap-12 md:gap-24">
+                    <motion.div 
+                      initial={{ opacity: 0, x: 50 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, margin: "-100px" }} transition={{ duration: 0.8 }}
+                      className="md:w-1/2"
+                    >
+                      <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-emerald-500/20 text-emerald-400 mb-6">
+                        <CircleStackIcon className="h-8 w-8" />
+                      </div>
+                      <h3 className="text-3xl font-bold text-white mb-4">MCP Native Integration</h3>
+                      <p className="text-lg text-gray-400 leading-relaxed">
+                        LLMs are useless without real environment data. PharmaIQ securely connects to 8+ Model Context Protocol (MCP) servers. We pull live data from IoT Fridge telemetry, HRMS Rosters, Weather APIs, and local Epidemiological databases in real-time.
+                      </p>
+                    </motion.div>
+                    <motion.div 
+                      initial={{ opacity: 0, x: -50 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, margin: "-100px" }} transition={{ duration: 0.8 }}
+                      className="md:w-1/2 grid grid-cols-2 gap-4"
+                    >
+                       <div className="h-32 rounded-2xl border border-emerald-500/20 bg-emerald-900/10 flex flex-col items-center justify-center text-emerald-400">
+                         <span className="font-bold text-2xl">IoT</span>
+                         <span className="text-sm opacity-70">Sensors</span>
+                       </div>
+                       <div className="h-32 rounded-2xl border border-emerald-500/20 bg-emerald-900/10 flex flex-col items-center justify-center text-emerald-400">
+                         <span className="font-bold text-2xl">ERP</span>
+                         <span className="text-sm opacity-70">Inventory</span>
+                       </div>
+                       <div className="h-32 rounded-2xl border border-emerald-500/20 bg-emerald-900/10 flex flex-col items-center justify-center text-emerald-400">
+                         <span className="font-bold text-2xl">IDSP</span>
+                         <span className="text-sm opacity-70">Health Data</span>
+                       </div>
+                       <div className="h-32 rounded-2xl border border-emerald-500/20 bg-emerald-900/10 flex flex-col items-center justify-center text-emerald-400">
+                         <span className="font-bold text-2xl">HRMS</span>
+                         <span className="text-sm opacity-70">Roster</span>
+                       </div>
+                    </motion.div>
+                  </div>
+
+                  {/* Feature 3 - HITL */}
+                  <div className="flex flex-col md:flex-row items-center gap-12 md:gap-24">
+                    <motion.div 
+                      initial={{ opacity: 0, x: -50 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, margin: "-100px" }} transition={{ duration: 0.8 }}
+                      className="md:w-1/2"
+                    >
+                      <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-indigo-500/20 text-indigo-400 mb-6">
+                        <ComputerDesktopIcon className="h-8 w-8" />
+                      </div>
+                      <h3 className="text-3xl font-bold text-white mb-4">You Retain Control (HITL)</h3>
+                      <p className="text-lg text-gray-400 leading-relaxed">
+                        The AI handles the heavy lifting of reasoning over thousands of data points, but <strong>high-impact actions are never fully automated</strong>. The system pauses and waits for your clear approval in a secure, glassmorphism dashboard.
+                      </p>
+                    </motion.div>
+                    <motion.div 
+                      initial={{ opacity: 0, x: 50 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, margin: "-100px" }} transition={{ duration: 0.8 }}
+                      className="md:w-1/2 w-full flex justify-center"
+                    >
+                      <button
+                        onClick={() => setAuthState("login")}
+                        className="group flex items-center justify-center gap-3 rounded-2xl bg-blue-600 px-10 py-6 text-xl font-bold text-white shadow-[0_0_30px_rgba(37,99,235,0.4)] transition-all hover:bg-blue-500 hover:scale-105"
+                      >
+                        Enter The Grid
+                        <ArrowRightIcon className="h-6 w-6 transition-transform group-hover:translate-x-2" />
+                      </button>
+                    </motion.div>
+                  </div>
+                </div>
+             </div>
+             
+             <footer className="w-full text-center mt-32 py-8 border-t border-white/5 text-gray-600">
+               <p>© 2026 PharmaIQ. Autonomous Healthcare Retail Operations.</p>
+             </footer>
+          </section>
         </motion.div>
       )}
 
