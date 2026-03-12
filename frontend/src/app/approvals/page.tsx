@@ -12,7 +12,9 @@ import {
     TrendingUp,
     AlertCircle,
     RefreshCcw,
-    MapPin
+    MapPin,
+    CheckSquare,
+    XSquare
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
@@ -26,6 +28,7 @@ export default function ApprovalsPage() {
     const [pendingRuns, setPendingRuns] = useState<FullRunDetails[]>([]);
     const [loading, setLoading] = useState(true);
     const [processing, setProcessing] = useState<string | null>(null);
+    const [isBulkProcessing, setIsBulkProcessing] = useState(false);
 
     useEffect(() => {
         fetchPending();
@@ -64,6 +67,28 @@ export default function ApprovalsPage() {
         }
     };
 
+    const handleBulkDecision = async (decision: "approved" | "rejected") => {
+        try {
+            setIsBulkProcessing(true);
+            const allActions = pendingRuns.flatMap(run => 
+                run.actions_for_approval.map(action => ({ runId: run.run_id, actionId: action.action_id }))
+            );
+
+            // Process sequentially to avoid overwhelming the server
+            for (const item of allActions) {
+                await apiService.processApproval(item.runId, item.actionId, decision);
+            }
+            
+            await fetchPending();
+        } catch (error) {
+            console.error(`Failed to bulk process ${decision}`, error);
+        } finally {
+            setIsBulkProcessing(false);
+        }
+    };
+
+    const totalPendingItems = pendingRuns.reduce((acc, r) => acc + r.actions_for_approval.length, 0);
+
     return (
         <div className="p-8 space-y-8 max-w-7xl mx-auto">
             {/* Header */}
@@ -77,9 +102,35 @@ export default function ApprovalsPage() {
                         <p className="text-muted-foreground">Human-in-the-Loop gateway for high-value and risk-critical actions.</p>
                     </div>
                 </div>
-                <div className="flex items-center gap-2 px-4 py-2 bg-white/5 rounded-lg border border-white/5">
-                    <History className="w-4 h-4 text-muted-foreground" />
-                    <span className="text-sm text-white font-medium">{pendingRuns.reduce((acc, r) => acc + r.actions_for_approval.length, 0)} Items Pending</span>
+                <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-2 px-4 py-2 bg-white/5 rounded-lg border border-white/5">
+                        <History className="w-4 h-4 text-muted-foreground" />
+                        <span className="text-sm text-white font-medium">{totalPendingItems} Items Pending</span>
+                    </div>
+                    {totalPendingItems > 0 && (
+                        <div className="flex items-center gap-2 pl-4 border-l border-white/10">
+                            <Button 
+                                variant="outline" 
+                                size="sm"
+                                disabled={isBulkProcessing || loading}
+                                onClick={() => handleBulkDecision("approved")}
+                                className="bg-success/10 text-success border-success/20 hover:bg-success hover:text-white transition-all shadow-sm"
+                            >
+                                {isBulkProcessing ? <RefreshCcw className="w-4 h-4 mr-2 animate-spin" /> : <CheckSquare className="w-4 h-4 mr-2" />}
+                                Accept All
+                            </Button>
+                            <Button 
+                                variant="outline" 
+                                size="sm"
+                                disabled={isBulkProcessing || loading}
+                                onClick={() => handleBulkDecision("rejected")}
+                                className="bg-danger/10 text-danger border-danger/20 hover:bg-danger hover:text-white transition-all shadow-sm"
+                            >
+                                {isBulkProcessing ? <RefreshCcw className="w-4 h-4 mr-2 animate-spin" /> : <XSquare className="w-4 h-4 mr-2" />}
+                                Reject All
+                            </Button>
+                        </div>
+                    )}
                 </div>
             </div>
 
